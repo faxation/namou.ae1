@@ -181,7 +181,7 @@ export default function ROIPage() {
   const router = useRouter();
   const [inputs, setInputs] = useState<Inputs>(() => loadInitialROIState().inputs);
   const [activeScenario, setActiveScenario] = useState<Scenario>("base");
-  const [offer, setOffer] = useState<OfferSim>(() => loadInitialROIState().offer);
+  const _offer = loadInitialROIState().offer; // kept for sessionStorage seeding
   const [sourcePlot, setSourcePlot] = useState<Plot | null>(() => loadInitialROIState().sourcePlot);
   const [comparePlots, setComparePlots] = useState<Plot[]>(() => loadInitialROIState().comparePlots);
   const [showPlotPicker, setShowPlotPicker] = useState(false);
@@ -189,7 +189,7 @@ export default function ROIPage() {
   const isCompareMode = comparePlots.length === 2;
 
   const results = useMemo(() => compute(inputs), [inputs]);
-  const offerResults = useMemo(() => computeOffer(inputs, offer), [inputs, offer]);
+  void _offer; // used only for initial load
   const dealLabel = getDealLabel(results.profitMargin);
 
   const inputs2 = useMemo(() => {
@@ -368,42 +368,22 @@ export default function ROIPage() {
             </div>
           </ContentCard>
 
-          {/* Offer Simulator */}
-          <ContentCard className="shrink-0">
-            <p className="text-xs uppercase tracking-widest text-muted mb-1 font-semibold">Offer Simulator</p>
-            <p className="text-sm text-muted mb-3">Test a land offer to see profit impact.</p>
-
-            <TogglePair
-              optA={{ key: "per-gfa",  label: "Price / GFA" }}
-              optB={{ key: "per-plot", label: "Price / Plot sqft" }}
-              value={offer.method}
-              onChange={v => setOffer(o => ({ ...o, method: v as PricingMethod }))}
-              fullWidth
-            />
-
-            <div className="mt-2">
-              {offer.method === "per-gfa"
-                ? <NumInput label="Offer Price / GFA"      value={offer.pricePerGFA}       unit="AED" prefix onChange={v => setOffer(o => ({ ...o, pricePerGFA: v }))} />
-                : <NumInput label="Offer Price / Plot sqft" value={offer.pricePerPlotSqft} unit="AED" prefix onChange={v => setOffer(o => ({ ...o, pricePerPlotSqft: v }))} />
-              }
-            </div>
-
-            <div className="mt-1 divide-y divide-mint-light/60">
-              <MetricRow label="Offer Land Cost" value={fmtAED(offerResults.offerLandCost)} />
-              <MetricRow label="New Total Cost"  value={fmtAED(offerResults.newTotalCost)} />
-              <MetricRow label="New Profit"      value={fmtAED(offerResults.newProfit)} highlight={offerResults.newProfit > 0} />
-              <div className="flex items-center justify-between py-2.5">
-                <p className="text-sm text-muted">New Profit Margin</p>
-                <div className="flex items-center gap-2">
-                  <p className="text-base font-bold text-deep-forest">{offerResults.newMargin.toFixed(1)}%</p>
-                  {(() => {
-                    const dl = getDealLabel(offerResults.newMargin);
-                    return <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${dl.bg} ${dl.text}`}>{dl.label}</span>;
-                  })()}
-                </div>
-              </div>
-            </div>
-          </ContentCard>
+          {/* Offer Simulator button */}
+          <button
+            onClick={() => {
+              sessionStorage.setItem("roi_results", JSON.stringify({ inputs, results, activeScenario }));
+              router.push("/offer");
+            }}
+            className="flex items-center justify-center gap-2 w-full px-6 py-3 bg-forest text-white rounded-xl font-semibold text-sm hover:bg-deep-forest transition-colors shrink-0"
+          >
+            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+              <rect x="4" y="2" width="16" height="20" rx="2" />
+              <line x1="8" y1="6" x2="16" y2="6" />
+              <line x1="8" y1="10" x2="16" y2="10" />
+              <line x1="8" y1="14" x2="12" y2="14" />
+            </svg>
+            Offer Simulator
+          </button>
         </div>
 
         {/* ═══════════ RIGHT: Results ═══════════ */}
