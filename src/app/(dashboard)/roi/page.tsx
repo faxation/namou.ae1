@@ -516,6 +516,16 @@ export default function ROIPage() {
                     </div>
                   )}
                 </div>
+                <button
+                  onClick={() => {
+                    sessionStorage.setItem("roi_results", JSON.stringify({ inputs, results, activeScenario }));
+                    router.push("/offer");
+                  }}
+                  className="flex items-center gap-2 px-6 py-2.5 bg-forest text-white rounded-xl font-semibold text-sm hover:bg-deep-forest transition-colors"
+                >
+                  Offer Simulator
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><polyline points="9 18 15 12 9 6" /></svg>
+                </button>
               </div>
             </>
           )}
