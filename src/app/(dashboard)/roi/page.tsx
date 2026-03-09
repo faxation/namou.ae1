@@ -368,22 +368,6 @@ export default function ROIPage() {
             </div>
           </ContentCard>
 
-          {/* Offer Simulator button */}
-          <button
-            onClick={() => {
-              sessionStorage.setItem("roi_results", JSON.stringify({ inputs, results, activeScenario }));
-              router.push("/offer");
-            }}
-            className="flex items-center justify-center gap-2 w-full px-6 py-3 bg-forest text-white rounded-xl font-semibold text-sm hover:bg-deep-forest transition-colors shrink-0"
-          >
-            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-              <rect x="4" y="2" width="16" height="20" rx="2" />
-              <line x1="8" y1="6" x2="16" y2="6" />
-              <line x1="8" y1="10" x2="16" y2="10" />
-              <line x1="8" y1="14" x2="12" y2="14" />
-            </svg>
-            Offer Simulator
-          </button>
         </div>
 
         {/* ═══════════ RIGHT: Results ═══════════ */}
@@ -539,7 +523,7 @@ export default function ROIPage() {
                   }}
                   className="flex items-center gap-2 px-6 py-2.5 bg-forest text-white rounded-xl font-semibold text-sm hover:bg-deep-forest transition-colors"
                 >
-                  Proceed to Offer
+                  Offer Simulator
                   <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><polyline points="9 18 15 12 9 6" /></svg>
                 </button>
               </div>
