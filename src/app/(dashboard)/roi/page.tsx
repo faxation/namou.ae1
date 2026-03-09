@@ -371,13 +371,13 @@ export default function ROIPage() {
         </div>
 
         {/* ═══════════ RIGHT: Results ═══════════ */}
-        <div className="w-1/2 flex flex-col gap-2 min-h-0 overflow-hidden pl-1">
+        <div className="w-1/2 flex flex-col gap-3 min-h-0 overflow-hidden pl-1">
 
           {/* ── Single-plot results ── */}
           {!isCompareMode && (
-            <>
+            <div className="flex flex-col gap-3 h-full">
               {/* KPI Row */}
-              <div className="grid grid-cols-2 gap-2 shrink-0">
+              <div className="grid grid-cols-2 gap-3 shrink-0">
                 <KPICard
                   label="Total Revenue (GDV)"
                   value={fmtAED(results.revenue)}
@@ -442,9 +442,9 @@ export default function ROIPage() {
               </div>
 
               {/* Investor Metrics */}
-              <ContentCard className="py-2 px-4">
-                <p className="text-xs uppercase tracking-widest text-muted mb-1 font-semibold">Investor Metrics</p>
-                <div className="divide-y divide-mint-light/60">
+              <ContentCard className="py-3 px-5 flex-1 flex flex-col">
+                <p className="text-xs uppercase tracking-widest text-muted mb-2 font-semibold">Investor Metrics</p>
+                <div className="divide-y divide-mint-light/60 flex-1 flex flex-col justify-evenly">
                   <MetricRow label="Return on Cost"      value={`${results.returnOnCost.toFixed(1)}%`} />
                   <MetricRow label="GDV Multiple"         value={`${results.gdvMultiple.toFixed(2)}×`} />
                   <MetricRow label="Profit / Land sqft"   value={`AED ${formatNumber(Math.round(results.profitPerPlotSqft))}`} />
@@ -455,14 +455,14 @@ export default function ROIPage() {
               </ContentCard>
 
               {/* Sensitivity chart */}
-              <ContentCard className="py-2 px-4">
+              <ContentCard className="py-3 px-5 flex-1 flex flex-col">
                 <p className="text-xs uppercase tracking-widest text-muted mb-2 font-semibold">Profit vs. Exit Price</p>
-                <div className="flex items-end gap-3 min-h-[70px]">
+                <div className="flex items-end gap-3 flex-1 min-h-[60px]">
                   {sensitivityData.map(d => {
                     const ratio = d.profit >= 0 ? d.profit / maxAbsProfit : 0;
                     const isCurrent = d.price === closestSensPrice;
                     return (
-                      <div key={d.price} className="flex flex-col items-center flex-1 h-[70px]">
+                      <div key={d.price} className="flex flex-col items-center flex-1 h-full">
                         <div className="flex-1 flex items-end w-full">
                           <div
                             className={`w-full rounded-t transition-all ${isCurrent ? "bg-forest" : "bg-forest/25"}`}
@@ -527,7 +527,7 @@ export default function ROIPage() {
                   <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><polyline points="9 18 15 12 9 6" /></svg>
                 </button>
               </div>
-            </>
+            </div>
           )}
 
           {/* ── Comparison results ── */}
@@ -629,8 +629,8 @@ function KPICard({
       onMouseEnter={() => (tooltipLines || tooltipFormula) && setShow(true)}
       onMouseLeave={() => setShow(false)}
     >
-      <ContentCard className={`${cardBg} py-2.5 px-3`}>
-        <p className="text-[10px] uppercase tracking-widest text-muted mb-1 font-semibold text-center">{label}</p>
+      <ContentCard className={`${cardBg} py-3 px-4`}>
+        <p className="text-xs uppercase tracking-widest text-muted mb-1 font-semibold text-center">{label}</p>
         {compareValues ? (
           <div className="flex items-start gap-2">
             <div className="flex-1 text-center">
@@ -655,7 +655,7 @@ function KPICard({
           </div>
         ) : (
           <div className="text-center">
-            <p className={`${primary ? "text-xl" : "text-lg"} font-bold font-heading leading-tight ${primary ? "text-forest" : "text-deep-forest"}`}>{value}</p>
+            <p className={`${primary ? "text-2xl" : "text-xl"} font-bold font-heading leading-tight ${primary ? "text-forest" : "text-deep-forest"}`}>{value}</p>
             {sub && <p className="text-xs text-muted mt-0.5">{sub}</p>}
             {badge && (
               <span className={`mt-1.5 inline-block text-xs font-semibold px-2.5 py-1 rounded-full ${badge.bg} ${badge.text}`}>
@@ -760,12 +760,12 @@ function ComputedRow({ label, value, highlight }: { label: string; value: string
 
 function MetricRow({ label, value, sub, highlight }: { label: string; value: string; sub?: string; highlight?: boolean }) {
   return (
-    <div className="flex items-center justify-between py-1.5">
+    <div className="flex items-center justify-between py-2">
       <div>
         <p className="text-sm text-muted">{label}</p>
         {sub && <p className="text-xs text-muted/60">{sub}</p>}
       </div>
-      <p className={`text-sm font-bold ${highlight ? "text-forest" : "text-deep-forest"}`}>{value}</p>
+      <p className={`text-base font-bold ${highlight ? "text-forest" : "text-deep-forest"}`}>{value}</p>
     </div>
   );
 }
