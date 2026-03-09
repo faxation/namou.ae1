@@ -237,10 +237,10 @@ export default function FinalOfferPage() {
                 Submit Offer
               </button>
               <Link
-                href="/roi"
+                href="/cta"
                 className="px-6 py-3 bg-white border border-mint-light text-deep-forest rounded-xl font-medium text-sm hover:bg-mint-white transition-colors"
               >
-                Adjust in ROI Simulator
+                Next Steps
               </Link>
             </div>
           </ContentCard>
