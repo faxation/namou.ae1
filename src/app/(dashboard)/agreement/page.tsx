@@ -207,13 +207,10 @@ function PropertyIntroductionForm() {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4 p-5 flex-1">
       {/* Header */}
-      <div className="bg-forest rounded-xl px-4 py-3 flex items-center gap-3">
-        <Image src="/logo.png" alt="Namou" width={100} height={32} className="object-contain h-6 w-auto brightness-0 invert" />
-        <div className="w-px h-6 bg-white/20" />
-        <div>
-          <p className="text-xs font-bold text-white leading-tight">Property Introduction Form</p>
-          <p className="text-[10px] text-white/60" dir="rtl">نموذج تعريف العقار</p>
-        </div>
+      <div className="bg-forest rounded-xl px-5 py-4 flex items-center justify-between">
+        <p className="text-sm font-bold text-white">Property Introduction Form</p>
+        <Image src="/logo.png" alt="Namou" width={80} height={26} className="object-contain h-5 w-auto brightness-0 invert shrink-0" />
+        <p className="text-sm font-bold text-white/80" dir="rtl">نموذج تعريف العقار</p>
       </div>
 
       {/* Property Summary */}
@@ -336,13 +333,10 @@ function A2AForm() {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4 p-5 flex-1">
       {/* Header */}
-      <div className="bg-forest rounded-xl px-4 py-3 flex items-center gap-3">
-        <Image src="/logo.png" alt="Namou" width={100} height={32} className="object-contain h-6 w-auto brightness-0 invert" />
-        <div className="w-px h-6 bg-white/20" />
-        <div>
-          <p className="text-xs font-bold text-white leading-tight">A2A Agreement</p>
-          <p className="text-[10px] text-white/60" dir="rtl">اتفاقية وسيط إلى وسيط</p>
-        </div>
+      <div className="bg-forest rounded-xl px-5 py-4 flex items-center justify-between">
+        <p className="text-sm font-bold text-white">A2A Agreement</p>
+        <Image src="/logo.png" alt="Namou" width={80} height={26} className="object-contain h-5 w-auto brightness-0 invert shrink-0" />
+        <p className="text-sm font-bold text-white/80" dir="rtl">اتفاقية وسيط إلى وسيط</p>
       </div>
 
       {/* Party A (read-only) */}
