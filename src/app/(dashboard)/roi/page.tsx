@@ -160,7 +160,7 @@ function loadInitialROIState() {
   let comparePlots: Plot[] = [];
   try {
     const cStored = sessionStorage.getItem("compare_plots");
-    if (cStored) { const cp: Plot[] = JSON.parse(cStored); if (cp.length === 2) { comparePlots = cp; inputs = deriveInputsFromPlot(cp[0], inputs); } }
+    if (cStored) { const cp: Plot[] = JSON.parse(cStored); if (cp.length === 2) { comparePlots = cp; const farA = cp[0].far ?? (cp[0].gfa ? cp[0].gfa / cp[0].plotArea : inputs.gfaRatio); inputs = { ...inputs, plotSize: cp[0].plotArea, gfaRatio: parseFloat(farA.toFixed(2)) }; } }
   } catch { /* ignore */ }
   try {
     const stored = sessionStorage.getItem("selected_plot");
@@ -194,7 +194,9 @@ export default function ROIPage() {
 
   const inputs2 = useMemo(() => {
     if (!isCompareMode) return null;
-    return deriveInputsFromPlot(comparePlots[1], inputs);
+    const plot = comparePlots[1];
+    const derivedFAR = plot.far ?? (plot.gfa ? plot.gfa / plot.plotArea : inputs.gfaRatio);
+    return { ...inputs, plotSize: plot.plotArea, gfaRatio: parseFloat(derivedFAR.toFixed(2)) };
   }, [isCompareMode, comparePlots, inputs]);
 
   const results2 = useMemo(() => inputs2 ? compute(inputs2) : null, [inputs2]);
@@ -313,7 +315,84 @@ export default function ROIPage() {
             <p className="text-xs text-muted mt-1">{SCENARIO_META[activeScenario].description}</p>
           </div>
 
-          {/* Input variables — 2-column grid */}
+          {/* Input variables */}
+          {isCompareMode && inputs2 && results2 ? (
+          <ContentCard className="flex-1 flex flex-col overflow-y-auto">
+            {/* Fixed per-plot data */}
+            <div className="mb-3">
+              <div className="flex items-center justify-between mb-1.5">
+                <p className="text-[10px] uppercase tracking-widest text-muted font-semibold">Fixed (Per Plot)</p>
+                <div className="flex items-center gap-4 text-[10px] font-medium">
+                  <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-forest" /><span className="text-forest">{comparePlots[0].name}</span></span>
+                  <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-[#3b82f6]" /><span className="text-[#3b82f6]">{comparePlots[1].name}</span></span>
+                </div>
+              </div>
+              <div className="bg-mint-bg/30 rounded-lg px-3 divide-y divide-mint-light/40">
+                <DualFixedRow label="Plot Size" v1={`${formatNumber(inputs.plotSize)} sqft`} v2={`${formatNumber(inputs2.plotSize)} sqft`} />
+                <DualFixedRow label="FAR" v1={`${inputs.gfaRatio}×`} v2={`${inputs2.gfaRatio}×`} />
+                <DualFixedRow label="GFA" v1={`${formatNumber(Math.round(results.gfa))} sqft`} v2={`${formatNumber(Math.round(results2.gfa))} sqft`} computed />
+              </div>
+            </div>
+
+            {/* Shared variable inputs — 2-column grid */}
+            <p className="text-[10px] uppercase tracking-widest text-muted font-semibold mb-1">Shared Variables</p>
+            <div className="grid grid-cols-2 gap-x-6 flex-1">
+              <div className="flex flex-col">
+                <p className="text-[10px] uppercase tracking-widest text-muted font-semibold mb-0.5 mt-1">Land</p>
+                <div className="divide-y divide-mint-light/60 flex-1 flex flex-col justify-evenly">
+                  <div className="flex items-center justify-between py-1.5">
+                    <span className="text-xs text-muted">Pricing Method</span>
+                    <TogglePair
+                      optA={{ key: "per-plot", label: "/ Plot sqft" }}
+                      optB={{ key: "per-gfa",  label: "/ GFA" }}
+                      value={inputs.pricingMethod}
+                      onChange={v => update("pricingMethod", v as PricingMethod)}
+                    />
+                  </div>
+                  {inputs.pricingMethod === "per-plot"
+                    ? <NumInput label="Price / Plot sqft" value={inputs.pricePerPlotSqft} unit="AED" prefix onChange={v => update("pricePerPlotSqft", v)} />
+                    : <NumInput label="Price / GFA sqft"  value={inputs.pricePerGFA}       unit="AED" prefix onChange={v => update("pricePerGFA", v)} />
+                  }
+                  <DualComputedRow label="Total Land Cost" v1={fmtAED(results.landCost)} v2={fmtAED(results2.landCost)} />
+                </div>
+
+                <p className="text-[10px] uppercase tracking-widest text-muted font-semibold mb-0.5 mt-2">Construction</p>
+                <div className="divide-y divide-mint-light/60 flex-1 flex flex-col justify-evenly">
+                  <NumInput label="Cost / GFA sqft" value={inputs.constructionCostPerGFA} unit="AED" prefix onChange={v => update("constructionCostPerGFA", v)} />
+                  <NumInput label="Soft Cost" value={inputs.softCostPct} unit="%" suffix onChange={v => update("softCostPct", v)} />
+                  <DualComputedRow label="Total Construction" v1={fmtAED(results.constructionCost)} v2={fmtAED(results2.constructionCost)} />
+                </div>
+              </div>
+
+              <div className="flex flex-col">
+                <p className="text-[10px] uppercase tracking-widest text-muted font-semibold mb-0.5 mt-1">Development</p>
+                <div className="divide-y divide-mint-light/60 flex-1 flex flex-col justify-evenly">
+                  <NumInput label="Efficiency (NSA/GFA)" value={inputs.efficiency} unit="%" suffix onChange={v => update("efficiency", v)} />
+                  <DualComputedRow label="NSA" v1={`${formatNumber(Math.round(results.nsa))} sqft`} v2={`${formatNumber(Math.round(results2.nsa))} sqft`} />
+                </div>
+
+                <p className="text-[10px] uppercase tracking-widest text-muted font-semibold mb-0.5 mt-2">Sales</p>
+                <div className="divide-y divide-mint-light/60 flex-1 flex flex-col justify-evenly">
+                  <NumInput label="Selling Price / NSA" value={inputs.sellingPricePerNSA} unit="AED" prefix onChange={v => update("sellingPricePerNSA", v)} />
+                  <div className="py-1">
+                    <div className="flex justify-between text-[10px] text-muted mb-0.5">
+                      <span>AED {formatNumber(SLIDER_MIN)}</span>
+                      <span className="font-medium text-forest">AED {formatNumber(sliderVal)}</span>
+                      <span>AED {formatNumber(SLIDER_MAX)}</span>
+                    </div>
+                    <input
+                      type="range" min={SLIDER_MIN} max={SLIDER_MAX} step={100}
+                      value={sliderVal}
+                      onChange={e => update("sellingPricePerNSA", Number(e.target.value))}
+                      className="w-full accent-forest cursor-pointer"
+                    />
+                  </div>
+                  <ComputedRow label="Equiv. Price / GFA" value={`AED ${formatNumber(Math.round(results.equivPricePerGFA))}`} />
+                </div>
+              </div>
+            </div>
+          </ContentCard>
+          ) : (
           <ContentCard className="flex-1 flex flex-col overflow-y-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 md:grid-rows-2 gap-x-6 gap-y-2 flex-1">
               <Section title="Land">
@@ -366,6 +445,7 @@ export default function ROIPage() {
               </Section>
             </div>
           </ContentCard>
+          )}
 
         </div>
 
@@ -502,7 +582,8 @@ export default function ROIPage() {
                               const plotA = sourcePlot ?? plots[0];
                               const both = [plotA, p];
                               setComparePlots(both);
-                              setInputs(prev => deriveInputsFromPlot(plotA, prev));
+                              const farA = plotA.far ?? (plotA.gfa ? plotA.gfa / plotA.plotArea : inputs.gfaRatio);
+                              setInputs(prev => ({ ...prev, plotSize: plotA.plotArea, gfaRatio: parseFloat(farA.toFixed(2)) }));
                               sessionStorage.setItem("compare_plots", JSON.stringify(both));
                               setShowPlotPicker(false);
                             }}
@@ -779,6 +860,36 @@ function MetricRow({ label, value, sub, highlight }: { label: string; value: str
         {sub && <p className="text-xs text-muted/60">{sub}</p>}
       </div>
       <p className={`text-base font-bold ${highlight ? "text-forest" : "text-deep-forest"}`}>{value}</p>
+    </div>
+  );
+}
+
+function DualFixedRow({ label, v1, v2, computed }: { label: string; v1: string; v2: string; computed?: boolean }) {
+  return (
+    <div className="flex items-center justify-between py-1.5">
+      <span className="text-xs text-muted flex items-center gap-1">
+        {computed && <span className="text-[10px] text-forest/50">=</span>}
+        {label}
+      </span>
+      <div className="flex items-center gap-6 text-xs">
+        <span className="font-semibold text-forest">{v1}</span>
+        <span className="font-semibold text-[#3b82f6]">{v2}</span>
+      </div>
+    </div>
+  );
+}
+
+function DualComputedRow({ label, v1, v2 }: { label: string; v1: string; v2: string }) {
+  return (
+    <div className="flex items-center justify-between py-2 -mx-3 px-3 rounded-lg bg-mint-bg/40">
+      <p className="text-xs text-muted flex items-center gap-1">
+        <span className="text-[10px] text-forest/50">=</span>
+        {label}
+      </p>
+      <div className="flex items-center gap-4">
+        <p className="text-xs font-bold text-forest">{v1}</p>
+        <p className="text-xs font-bold text-[#3b82f6]">{v2}</p>
+      </div>
     </div>
   );
 }
