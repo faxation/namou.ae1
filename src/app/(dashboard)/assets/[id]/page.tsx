@@ -15,7 +15,7 @@ export default async function AssetPage({ params }: { params: Promise<{ id: stri
   }
 
   return (
-    <div className="flex flex-col flex-1 min-h-0 overflow-y-auto md:overflow-hidden">
+    <div className="flex flex-col flex-1 min-h-0 overflow-y-auto md:overflow-y-hidden">
       {/* Breadcrumb */}
       <div className="flex items-center gap-2 text-sm text-muted mb-1">
         <Link href="/categories" className="hover:text-forest transition-colors">Categories</Link>

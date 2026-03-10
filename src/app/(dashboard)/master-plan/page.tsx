@@ -89,7 +89,7 @@ function MasterPlanContent() {
   const showCompare = compareMode && comparePlots.length > 0;
 
   return (
-    <div className="flex flex-col flex-1 gap-2 lg:gap-3 animate-fade-in min-h-0 overflow-y-auto md:overflow-hidden">
+    <div className="flex flex-col flex-1 gap-2 lg:gap-3 animate-fade-in min-h-0 overflow-y-auto md:overflow-y-hidden">
       {/* Header row */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 shrink-0">
         <div>

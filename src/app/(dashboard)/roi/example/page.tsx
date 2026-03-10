@@ -7,7 +7,7 @@ export default function ExampleDealPage() {
   const totalConstructionCost = exampleDealGFA * exampleDealDefaults.constructionCostPerSqFt;
 
   return (
-    <div className="flex flex-col flex-1 gap-6 min-h-0 overflow-y-auto md:overflow-hidden">
+    <div className="flex flex-col flex-1 gap-6 min-h-0 overflow-y-auto md:overflow-y-hidden">
 
       {/* Header */}
       <div>

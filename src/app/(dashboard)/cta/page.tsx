@@ -217,7 +217,7 @@ export default function CTAPage() {
   }
 
   return (
-    <div className="flex flex-col flex-1 gap-3 lg:gap-4 animate-fade-in min-h-0 overflow-y-auto md:overflow-hidden">
+    <div className="flex flex-col flex-1 gap-3 lg:gap-4 animate-fade-in min-h-0 overflow-y-auto md:overflow-y-hidden">
       <div className="shrink-0">
         <h1 className="text-xl lg:text-3xl font-bold text-forest font-heading">Next Steps</h1>
         <p className="text-sm text-muted mt-1">
@@ -347,7 +347,7 @@ export default function CTAPage() {
               </div>
             ) : (
               /* Calendar + Time picker */
-              <div className="flex flex-col md:flex-row flex-1 min-h-0 overflow-y-auto md:overflow-hidden">
+              <div className="flex flex-col md:flex-row flex-1 min-h-0 overflow-y-auto md:overflow-y-hidden">
                 {/* Calendar */}
                 <div className="flex-1 px-4 sm:px-10 py-4 sm:py-8 flex flex-col min-h-0">
                   {/* Month navigation */}

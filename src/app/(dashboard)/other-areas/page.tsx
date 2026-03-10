@@ -28,7 +28,7 @@ function OtherAreasContent() {
   );
 
   return (
-    <div className="flex flex-col flex-1 gap-6 min-h-0 overflow-y-auto md:overflow-hidden">
+    <div className="flex flex-col flex-1 gap-6 min-h-0 overflow-y-auto md:overflow-y-hidden">
       <div>
         <h1 className="text-xl lg:text-3xl font-bold text-forest font-heading">Other Areas</h1>
         <p className="text-sm text-muted mt-1">

@@ -207,7 +207,7 @@ export default function ROIPage() {
   }
 
   return (
-    <div className="flex flex-col flex-1 min-h-0 overflow-y-auto md:overflow-hidden animate-fade-in">
+    <div className="flex flex-col flex-1 min-h-0 overflow-y-auto md:overflow-y-hidden animate-fade-in">
 
       {/* ── Header ── */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 shrink-0 mb-2 lg:mb-3">

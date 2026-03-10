@@ -30,7 +30,7 @@ export default async function AreaPlotsPage({ params }: { params: Promise<{ type
   );
 
   return (
-    <div className="flex flex-col flex-1 gap-5 animate-fade-in min-h-0 overflow-y-auto md:overflow-hidden">
+    <div className="flex flex-col flex-1 gap-5 animate-fade-in min-h-0 overflow-y-auto md:overflow-y-hidden">
       <div className="shrink-0">
         <div className="flex items-center gap-2 text-sm text-muted mb-1">
           <Link href="/categories" className="hover:text-forest transition-colors">Categories</Link>
