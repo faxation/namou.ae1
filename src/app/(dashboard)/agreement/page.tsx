@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import Image from "next/image";
 import { plots } from "@/data/mock";
 
 /* ── helpers ── */
@@ -209,7 +208,6 @@ function PropertyIntroductionForm() {
       {/* Header */}
       <div className="bg-forest rounded-xl px-5 py-4 flex items-center justify-between">
         <p className="text-sm font-bold text-white">Property Introduction Form</p>
-        <Image src="/logo.png" alt="Namou" width={120} height={40} className="object-contain h-8 w-auto brightness-0 invert shrink-0" />
         <p className="text-sm font-bold text-white/80" dir="rtl">نموذج تعريف العقار</p>
       </div>
 
@@ -335,7 +333,6 @@ function A2AForm() {
       {/* Header */}
       <div className="bg-forest rounded-xl px-5 py-4 flex items-center justify-between">
         <p className="text-sm font-bold text-white">A2A Agreement</p>
-        <Image src="/logo.png" alt="Namou" width={120} height={40} className="object-contain h-8 w-auto brightness-0 invert shrink-0" />
         <p className="text-sm font-bold text-white/80" dir="rtl">اتفاقية وسيط إلى وسيط</p>
       </div>
 
