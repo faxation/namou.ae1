@@ -160,14 +160,14 @@ function loadInitialROIState() {
   let comparePlots: Plot[] = [];
   try {
     const cStored = sessionStorage.getItem("compare_plots");
-    if (cStored) { const cp: Plot[] = JSON.parse(cStored); if (cp.length === 2) comparePlots = cp; }
+    if (cStored) { const cp: Plot[] = JSON.parse(cStored); if (cp.length === 2) { comparePlots = cp; inputs = deriveInputsFromPlot(cp[0], inputs); } }
   } catch { /* ignore */ }
   try {
     const stored = sessionStorage.getItem("selected_plot");
     if (stored) {
       const plot: Plot = JSON.parse(stored);
       sourcePlot = plot;
-      inputs = deriveInputsFromPlot(plot, BASE_INPUTS);
+      inputs = deriveInputsFromPlot(plot, inputs);
       const derivedPricePerGFA = plot.gfa
         ? plot.askingPrice / plot.gfa
         : plot.askingPrice / (plot.plotArea * (plot.far ?? BASE_INPUTS.gfaRatio));
@@ -194,9 +194,8 @@ export default function ROIPage() {
 
   const inputs2 = useMemo(() => {
     if (!isCompareMode) return null;
-    const base = { ...BASE_INPUTS, ...SCENARIO_OVERRIDES[activeScenario] };
-    return deriveInputsFromPlot(comparePlots[1], base);
-  }, [isCompareMode, comparePlots, activeScenario]);
+    return deriveInputsFromPlot(comparePlots[1], inputs);
+  }, [isCompareMode, comparePlots, inputs]);
 
   const results2 = useMemo(() => inputs2 ? compute(inputs2) : null, [inputs2]);
   const dealLabel2 = results2 ? getDealLabel(results2.profitMargin) : null;
@@ -503,6 +502,7 @@ export default function ROIPage() {
                               const plotA = sourcePlot ?? plots[0];
                               const both = [plotA, p];
                               setComparePlots(both);
+                              setInputs(prev => deriveInputsFromPlot(plotA, prev));
                               sessionStorage.setItem("compare_plots", JSON.stringify(both));
                               setShowPlotPicker(false);
                             }}
