@@ -31,8 +31,6 @@ interface OfferSim {
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
-const SLIDER_MIN = 2500;
-const SLIDER_MAX = 4000;
 const SENSITIVITY_PRICES = [2500, 2800, 3200, 3600, 4000];
 const RLV_TARGET_MARGIN = 20;
 
@@ -100,19 +98,6 @@ function compute(inp: Inputs) {
   const equivPricePerGFA = inp.sellingPricePerNSA * (inp.efficiency / 100);
   const rlv = revenue * (1 - RLV_TARGET_MARGIN / 100) - constructionCost;
   return { gfa, nsa, landCost, constructionCost, totalCost, revenue, profit, profitMargin, returnOnCost, gdvMultiple, profitPerPlotSqft, equivPricePerGFA, rlv };
-}
-
-function computeOffer(inp: Inputs, offer: OfferSim) {
-  const gfa = inp.plotSize * inp.gfaRatio;
-  const offerLandCost = offer.method === "per-gfa"
-    ? gfa * offer.pricePerGFA
-    : inp.plotSize * offer.pricePerPlotSqft;
-  const constructionCost = gfa * inp.constructionCostPerGFA * (1 + inp.softCostPct / 100);
-  const newTotalCost = offerLandCost + constructionCost;
-  const revenue = gfa * (inp.efficiency / 100) * inp.sellingPricePerNSA;
-  const newProfit = revenue - newTotalCost;
-  const newMargin = revenue > 0 ? (newProfit / revenue) * 100 : 0;
-  return { offerLandCost, constructionCost, newTotalCost, newProfit, newMargin };
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -220,8 +205,6 @@ export default function ROIPage() {
     setActiveScenario(s);
     setInputs(prev => ({ ...prev, ...SCENARIO_OVERRIDES[s] }));
   }
-
-  const sliderVal = Math.min(Math.max(inputs.sellingPricePerNSA, SLIDER_MIN), SLIDER_MAX);
 
   return (
     <div className="flex flex-col flex-1 min-h-0 overflow-hidden animate-fade-in">
@@ -374,19 +357,6 @@ export default function ROIPage() {
                 <p className="text-[10px] uppercase tracking-widest text-muted font-semibold mb-0.5 mt-2">Sales</p>
                 <div className="divide-y divide-mint-light/60 flex-1 flex flex-col justify-evenly">
                   <NumInput label="Selling Price / NSA" value={inputs.sellingPricePerNSA} unit="AED" prefix onChange={v => update("sellingPricePerNSA", v)} />
-                  <div className="py-1">
-                    <div className="flex justify-between text-[10px] text-muted mb-0.5">
-                      <span>AED {formatNumber(SLIDER_MIN)}</span>
-                      <span className="font-medium text-forest">AED {formatNumber(sliderVal)}</span>
-                      <span>AED {formatNumber(SLIDER_MAX)}</span>
-                    </div>
-                    <input
-                      type="range" min={SLIDER_MIN} max={SLIDER_MAX} step={100}
-                      value={sliderVal}
-                      onChange={e => update("sellingPricePerNSA", Number(e.target.value))}
-                      className="w-full accent-forest cursor-pointer"
-                    />
-                  </div>
                   <ComputedRow label="Equiv. Price / GFA" value={`AED ${formatNumber(Math.round(results.equivPricePerGFA))}`} />
                 </div>
               </div>
@@ -430,19 +400,6 @@ export default function ROIPage() {
               <div className="flex-1 flex flex-col justify-evenly py-3">
                 <p className="text-[10px] uppercase tracking-widest text-muted font-semibold">Sales</p>
                 <NumInput label="Selling Price / NSA" value={inputs.sellingPricePerNSA} unit="AED" prefix onChange={v => update("sellingPricePerNSA", v)} />
-                <div>
-                  <div className="flex justify-between text-xs text-muted mb-1">
-                    <span>AED {formatNumber(SLIDER_MIN)}</span>
-                    <span className="font-medium text-forest">AED {formatNumber(sliderVal)}</span>
-                    <span>AED {formatNumber(SLIDER_MAX)}</span>
-                  </div>
-                  <input
-                    type="range" min={SLIDER_MIN} max={SLIDER_MAX} step={100}
-                    value={sliderVal}
-                    onChange={e => update("sellingPricePerNSA", Number(e.target.value))}
-                    className="w-full accent-forest cursor-pointer"
-                  />
-                </div>
               </div>
             </div>
           </ContentCard>
@@ -534,7 +491,7 @@ export default function ROIPage() {
                 </div>
               </ContentCard>
 
-              {/* Sensitivity chart */}
+              {/* Sensitivity chart + actions */}
               <ContentCard className="py-3 px-5 flex-1 flex flex-col">
                 <p className="text-xs uppercase tracking-widest text-muted mb-2 font-semibold">Profit vs. Exit Price</p>
                 <div className="flex items-end gap-3 flex-1 min-h-[60px]">
@@ -560,55 +517,55 @@ export default function ROIPage() {
                   })}
                 </div>
                 <p className="text-xs text-muted mt-2 text-center">AED per sqft NSA</p>
-              </ContentCard>
 
-              {/* Compare + Offer buttons */}
-              <div className="flex justify-between shrink-0 relative">
-                <div className="relative">
-                  <button
-                    onClick={() => setShowPlotPicker(v => !v)}
-                    className="flex items-center gap-2 px-4 py-2.5 border border-forest/30 text-forest rounded-xl font-medium text-sm hover:bg-mint-bg transition-colors"
-                  >
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /><rect x="14" y="14" width="7" height="7" /></svg>
-                    Compare Plots
-                  </button>
-                  {showPlotPicker && (
-                    <div className="absolute bottom-full left-0 mb-2 z-50 bg-white border border-mint-light rounded-2xl shadow-lg p-4 min-w-[260px]">
-                      <p className="text-xs uppercase tracking-wider text-muted font-semibold mb-3">Select a plot to compare</p>
-                      <div className="space-y-1.5 max-h-64 overflow-y-auto">
-                        {plots.filter(p => p.id !== sourcePlot?.id).map(p => (
-                          <button
-                            key={p.id}
-                            onClick={() => {
-                              const plotA = sourcePlot ?? plots[0];
-                              const both = [plotA, p];
-                              setComparePlots(both);
-                              const farA = plotA.far ?? (plotA.gfa ? plotA.gfa / plotA.plotArea : inputs.gfaRatio);
-                              setInputs(prev => ({ ...prev, plotSize: plotA.plotArea, gfaRatio: parseFloat(farA.toFixed(2)) }));
-                              sessionStorage.setItem("compare_plots", JSON.stringify(both));
-                              setShowPlotPicker(false);
-                            }}
-                            className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-mint-bg transition-colors border border-transparent hover:border-mint-light/60"
-                          >
-                            <p className="text-sm font-semibold text-forest">{p.name}</p>
-                            <p className="text-xs text-muted mt-0.5">{p.area} · AED {formatNumber(p.askingPrice)}</p>
-                          </button>
-                        ))}
+                {/* Actions */}
+                <div className="flex justify-between mt-3 pt-3 border-t border-mint-light/40 relative">
+                  <div className="relative">
+                    <button
+                      onClick={() => setShowPlotPicker(v => !v)}
+                      className="flex items-center gap-2 px-4 py-2.5 border border-forest/30 text-forest rounded-xl font-medium text-sm hover:bg-mint-bg transition-colors"
+                    >
+                      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /><rect x="14" y="14" width="7" height="7" /></svg>
+                      Compare Plots
+                    </button>
+                    {showPlotPicker && (
+                      <div className="absolute bottom-full left-0 mb-2 z-50 bg-white border border-mint-light rounded-2xl shadow-lg p-4 min-w-[260px]">
+                        <p className="text-xs uppercase tracking-wider text-muted font-semibold mb-3">Select a plot to compare</p>
+                        <div className="space-y-1.5 max-h-64 overflow-y-auto">
+                          {plots.filter(p => p.id !== sourcePlot?.id).map(p => (
+                            <button
+                              key={p.id}
+                              onClick={() => {
+                                const plotA = sourcePlot ?? plots[0];
+                                const both = [plotA, p];
+                                setComparePlots(both);
+                                const farA = plotA.far ?? (plotA.gfa ? plotA.gfa / plotA.plotArea : inputs.gfaRatio);
+                                setInputs(prev => ({ ...prev, plotSize: plotA.plotArea, gfaRatio: parseFloat(farA.toFixed(2)) }));
+                                sessionStorage.setItem("compare_plots", JSON.stringify(both));
+                                setShowPlotPicker(false);
+                              }}
+                              className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-mint-bg transition-colors border border-transparent hover:border-mint-light/60"
+                            >
+                              <p className="text-sm font-semibold text-forest">{p.name}</p>
+                              <p className="text-xs text-muted mt-0.5">{p.area} · AED {formatNumber(p.askingPrice)}</p>
+                            </button>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
+                  <button
+                    onClick={() => {
+                      sessionStorage.setItem("roi_results", JSON.stringify({ inputs, results, activeScenario }));
+                      router.push("/offer");
+                    }}
+                    className="flex items-center gap-2 px-6 py-2.5 bg-forest text-white rounded-xl font-semibold text-sm hover:bg-deep-forest transition-colors"
+                  >
+                    Offer Simulator
+                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><polyline points="9 18 15 12 9 6" /></svg>
+                  </button>
                 </div>
-                <button
-                  onClick={() => {
-                    sessionStorage.setItem("roi_results", JSON.stringify({ inputs, results, activeScenario }));
-                    router.push("/offer");
-                  }}
-                  className="flex items-center gap-2 px-6 py-2.5 bg-forest text-white rounded-xl font-semibold text-sm hover:bg-deep-forest transition-colors"
-                >
-                  Offer Simulator
-                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><polyline points="9 18 15 12 9 6" /></svg>
-                </button>
-              </div>
+              </ContentCard>
             </div>
           )}
 
@@ -679,21 +636,21 @@ export default function ROIPage() {
                     </React.Fragment>
                   ))}
                 </div>
-              </ContentCard>
 
-              {/* Offer Simulator button */}
-              <div className="flex justify-end shrink-0">
-                <button
-                  onClick={() => {
-                    sessionStorage.setItem("roi_results", JSON.stringify({ inputs, results, activeScenario }));
-                    router.push("/offer");
-                  }}
-                  className="flex items-center gap-2 px-6 py-2.5 bg-forest text-white rounded-xl font-semibold text-sm hover:bg-deep-forest transition-colors"
-                >
-                  Offer Simulator
-                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><polyline points="9 18 15 12 9 6" /></svg>
-                </button>
-              </div>
+                {/* Offer Simulator button */}
+                <div className="flex justify-end mt-3 pt-3 border-t border-mint-light/40">
+                  <button
+                    onClick={() => {
+                      sessionStorage.setItem("roi_results", JSON.stringify({ inputs, results, activeScenario }));
+                      router.push("/offer");
+                    }}
+                    className="flex items-center gap-2 px-6 py-2.5 bg-forest text-white rounded-xl font-semibold text-sm hover:bg-deep-forest transition-colors"
+                  >
+                    Offer Simulator
+                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><polyline points="9 18 15 12 9 6" /></svg>
+                  </button>
+                </div>
+              </ContentCard>
             </>
           )}
         </div>
@@ -779,15 +736,6 @@ function KPICard({
           })}
         </div>
       )}
-    </div>
-  );
-}
-
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <div className="flex flex-col h-full">
-      <p className="text-xs uppercase tracking-widest text-muted font-semibold mb-1">{title}</p>
-      <div className="divide-y divide-mint-light/60 flex-1 flex flex-col justify-evenly">{children}</div>
     </div>
   );
 }
