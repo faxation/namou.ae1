@@ -165,7 +165,7 @@ function MasterPlanContent() {
             <iframe
               src="https://mangomap.com/view-kcauw7z5/maps/153305/namou-lands?preview=true"
               title="Namou Master Plan Map"
-              allowFullScreen
+              sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-popups-to-escape-sandbox"
               loading="lazy"
               onLoad={() => setMapLoaded(true)}
               style={{
@@ -240,10 +240,12 @@ function MasterPlanContent() {
                   <span className="text-muted">Avg. Price/sqft</span>
                   <span className="font-bold text-deep-forest">AED {formatNumber(Math.round(filteredPlots.reduce((s, p) => s + p.pricePerSqFt, 0) / (filteredPlots.length || 1)))}</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-muted">Price Range</span>
-                  <span className="font-bold text-deep-forest">AED {formatNumber(Math.min(...filteredPlots.map(p => p.pricePerSqFt)))}–{formatNumber(Math.max(...filteredPlots.map(p => p.pricePerSqFt)))}</span>
-                </div>
+                {filteredPlots.length > 0 && (
+                  <div className="flex justify-between">
+                    <span className="text-muted">Price Range</span>
+                    <span className="font-bold text-deep-forest">AED {formatNumber(Math.min(...filteredPlots.map(p => p.pricePerSqFt)))}–{formatNumber(Math.max(...filteredPlots.map(p => p.pricePerSqFt)))}</span>
+                  </div>
+                )}
               </div>
             </div>
           )}

@@ -15,6 +15,7 @@ export default function LandingPage() {
   const [checked, setChecked] = useState(false);
   const [selectedType, setSelectedType] = useState<LandCategory | null>(null);
 
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     if (!sessionStorage.getItem("namou_session")) {
       router.replace("/login");
@@ -22,6 +23,7 @@ export default function LandingPage() {
       setChecked(true);
     }
   }, [router]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   if (!checked) return null;
 

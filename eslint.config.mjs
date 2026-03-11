@@ -12,6 +12,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Nested/sibling project directories — not part of this app's source
+    "namou.ae1/**",
+    "brand/**",
+    "spec/**",
   ]),
 ]);
 
