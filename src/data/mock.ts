@@ -1,28 +1,17 @@
-/* ── Mock data for the baseline UI (v1, no backend) ── */
+/**
+ * Namou app data — non-land records + re-exports of Mango land data.
+ *
+ * Land data (Plot, LandCategory, areas, plots, landCategories) lives in
+ * src/data/plots.ts — the single source of truth tied to MangoMap.
+ * All existing imports of those symbols from "@/data/mock" continue to work
+ * unchanged via the re-exports below.
+ */
 
-export type LandCategory = "residential" | "commercial" | "industrial" | "mixed-use";
+// ── Re-export Mango land data (single source of truth) ─────────────────────
+export type { LandCategory, Plot, LandCategoryInfo } from "./plots";
+export { areas, plots, landCategories } from "./plots";
 
-export interface Plot {
-  id: string;
-  name: string;
-  area: string;
-  category: LandCategory;
-  plotArea: number; // sq ft
-  askingPrice: number; // AED
-  pricePerSqFt: number; // AED
-  landUse: string;
-  location: string;
-  plotType: string;
-  airportEta: string;
-  casinoEta: string;
-  maxHeight?: string;
-  far?: number;
-  gfa?: number;
-  zoning?: string;
-  infrastructure?: string;
-  dimensions?: { width: number; depth: number };
-  developmentPotential?: string;
-}
+// ── Non-land types ──────────────────────────────────────────────────────────
 
 export interface Landmark {
   id: string;
@@ -46,13 +35,6 @@ export interface ItineraryItem {
   icon: string;
 }
 
-export interface LandCategoryInfo {
-  slug: LandCategory;
-  label: string;
-  description: string;
-  plotCount: number;
-}
-
 export interface ROIInputs {
   constructionCostPerSqFt: number;
   salePricePerSqFt: number;
@@ -66,119 +48,6 @@ export interface ROIOutputs {
   maximumLandPrice: number;
   gfaPrice: number;
 }
-
-/* ── Areas ── */
-export const areas = [
-  "Al Hamra (Freehold Plots)",
-  "Al Marjan Beach District",
-  "RAK Central",
-  "Al Qadisiyyah",
-  "Sajna",
-];
-
-/* ── Plots ── */
-export const plots: Plot[] = [
-  {
-    id: "plot-1",
-    name: "MBD-R-01",
-    area: "Al Marjan Beach District",
-    category: "mixed-use",
-    plotArea: 660744,
-    askingPrice: 73718880,
-    pricePerSqFt: 500,
-    landUse: "Retail & Convention Hospitality",
-    location: "Al Marjan Beach District, Ras Al Khaimah",
-    plotType: "Dual / Combined",
-    airportEta: "~30 min",
-    casinoEta: "~10 min",
-    maxHeight: "G+40",
-    far: 3.5,
-    gfa: 2312604,
-    zoning: "Mixed-use Hospitality",
-    infrastructure: "Full road + utilities",
-    dimensions: { width: 663, depth: 996 },
-  },
-  {
-    id: "plot-2",
-    name: "MBD-R-02",
-    area: "Al Marjan Beach District",
-    category: "residential",
-    plotArea: 426364,
-    askingPrice: 48_000_000,
-    pricePerSqFt: 450,
-    landUse: "Residential",
-    location: "Al Marjan Beach District, Ras Al Khaimah",
-    plotType: "Single",
-    airportEta: "~30 min",
-    casinoEta: "~10 min",
-    maxHeight: "G+30",
-    far: 3.0,
-    gfa: 1279092,
-    zoning: "Residential",
-    infrastructure: "Full road + utilities",
-    dimensions: { width: 500, depth: 852 },
-  },
-  {
-    id: "plot-3",
-    name: "MBD-H-01",
-    area: "Al Marjan Beach District",
-    category: "commercial",
-    plotArea: 665174,
-    askingPrice: 82_000_000,
-    pricePerSqFt: 520,
-    landUse: "Hospitality",
-    location: "Al Marjan Beach District, Ras Al Khaimah",
-    plotType: "Single",
-    airportEta: "~30 min",
-    casinoEta: "~8 min",
-    maxHeight: "G+45",
-    far: 4.0,
-    gfa: 2660696,
-    zoning: "Hospitality",
-    infrastructure: "Full road + utilities",
-    dimensions: { width: 710, depth: 937 },
-  },
-  {
-    id: "plot-4",
-    name: "MBD-CC-01",
-    area: "Al Marjan Beach District",
-    category: "commercial",
-    plotArea: 436_017,
-    askingPrice: 55_000_000,
-    pricePerSqFt: 480,
-    landUse: "Convention Center & Hotel",
-    location: "Al Marjan Beach District, Ras Al Khaimah",
-    plotType: "Combined",
-    airportEta: "~30 min",
-    casinoEta: "~12 min",
-    maxHeight: "G+35",
-    far: 3.2,
-    gfa: 1_395_254,
-    zoning: "Convention Center & Hotel",
-    infrastructure: "Full road + utilities",
-    dimensions: { width: 580, depth: 752 },
-  },
-  {
-    id: "plot-5",
-    name: "MBD-RM-01",
-    area: "Al Marjan Beach District",
-    category: "mixed-use",
-    plotArea: 518_000,
-    askingPrice: 62_000_000,
-    pricePerSqFt: 470,
-    landUse: "Residential / Mixed-use",
-    location: "Al Marjan Beach District, Ras Al Khaimah",
-    plotType: "Combined",
-    airportEta: "~30 min",
-    casinoEta: "~10 min",
-    maxHeight: "G+38",
-    far: 3.4,
-    gfa: 1_761_200,
-    zoning: "Residential / Mixed-use",
-    infrastructure: "Full road + utilities",
-    dimensions: { width: 620, depth: 835 },
-  },
-];
 
 /* ── Filter categories for Master Plan ── */
 export const masterPlanFilters = [
@@ -273,34 +142,6 @@ export function formatNumber(n: number): string {
 export function formatAED(n: number): string {
   return `AED ${n.toLocaleString("en-US")}`;
 }
-
-/* ── Land categories (Jad: bundle by TYPE not area) ── */
-export const landCategories: LandCategoryInfo[] = [
-  {
-    slug: "residential",
-    label: "Residential",
-    description: "High-density and villa residential plots across RAK's prime districts.",
-    plotCount: plots.filter((p) => p.category === "residential").length,
-  },
-  {
-    slug: "commercial",
-    label: "Commercial",
-    description: "Hospitality, convention, and retail-zoned plots with strong ROI potential.",
-    plotCount: plots.filter((p) => p.category === "commercial").length,
-  },
-  {
-    slug: "industrial",
-    label: "Industrial",
-    description: "Logistically connected industrial plots near ports and free zones.",
-    plotCount: 0, // no mock plots yet
-  },
-  {
-    slug: "mixed-use",
-    label: "Mixed-use",
-    description: "Combined residential, retail, and hospitality zoning for versatile development.",
-    plotCount: plots.filter((p) => p.category === "mixed-use").length,
-  },
-];
 
 /* ── ROI calculation helper ── */
 export function calculateROI(inputs: ROIInputs, gfa: number): ROIOutputs {
