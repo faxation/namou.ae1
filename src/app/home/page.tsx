@@ -68,19 +68,19 @@ export default function LandingPage() {
         </div>
 
         {/* Card — selector only */}
-        <div className="w-full max-w-4xl bg-[#FAF9F6]/90 backdrop-blur-sm border border-[#B5C4A8]/40 rounded-3xl px-4 sm:px-10 py-6 sm:py-8 shadow-lg flex flex-col items-center gap-6">
+        <div className="w-full max-w-4xl bg-white/8 backdrop-blur-sm border border-white/15 rounded-3xl px-4 sm:px-10 py-6 sm:py-8 shadow-2xl flex flex-col items-center gap-6">
 
           {/* Selector */}
           <div className="w-full">
             {selectedType === null ? (
               <>
-                <p className="text-xs uppercase tracking-[0.3em] text-[#6B7B6B] mb-4 text-center">Browse by land type</p>
+                <p className="text-xs uppercase tracking-[0.3em] text-white/50 mb-4 text-center">Browse by land type</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {landCategories.map((cat) => (
                     <button
                       key={cat.slug}
                       onClick={() => setSelectedType(cat.slug)}
-                      className="py-4 sm:py-6 px-4 sm:px-6 bg-[#E8EDDF] border border-[#B5C4A8]/50 rounded-2xl text-sm sm:text-base font-semibold text-[#2B3A2E] hover:bg-[#B5C4A8]/40 hover:border-[#8B9E7E] transition-all text-center"
+                      className="py-4 sm:py-6 px-4 sm:px-6 bg-white/20 backdrop-blur-sm border border-white/30 rounded-2xl text-sm sm:text-base font-semibold text-white hover:bg-white/30 hover:border-white/50 transition-all text-center"
                     >
                       {cat.label}
                     </button>
@@ -90,10 +90,10 @@ export default function LandingPage() {
             ) : (
               <>
                 <div className="flex items-center justify-between mb-4">
-                  <p className="text-xs uppercase tracking-[0.3em] text-[#6B7B6B]">Browse by area</p>
+                  <p className="text-xs uppercase tracking-[0.3em] text-white/50">Browse by area</p>
                   <button
                     onClick={() => setSelectedType(null)}
-                    className="text-sm text-[#6B7B6B] hover:text-[#2B3A2E] transition-colors"
+                    className="text-sm text-white/60 hover:text-white transition-colors"
                   >
                     ← Back
                   </button>
@@ -103,7 +103,7 @@ export default function LandingPage() {
                     <Link
                       key={area}
                       href={`/master-plan?type=${encodeURIComponent(selectedType)}&area=${encodeURIComponent(areaSlug(area))}`}
-                      className="py-4 sm:py-6 px-4 sm:px-6 bg-[#E8EDDF] border border-[#B5C4A8]/50 rounded-2xl text-sm sm:text-base font-semibold text-[#2B3A2E] hover:bg-[#B5C4A8]/40 hover:border-[#8B9E7E] transition-all text-center"
+                      className="py-4 sm:py-6 px-4 sm:px-6 bg-white/20 backdrop-blur-sm border border-white/30 rounded-2xl text-sm sm:text-base font-semibold text-white hover:bg-white/30 hover:border-white/50 transition-all text-center"
                     >
                       {area}
                     </Link>
