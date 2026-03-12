@@ -15,11 +15,6 @@ interface Props {
 
 const MAP_CENTER: [number, number] = [25.745, 55.855];
 const OVERVIEW_ZOOM = 11;
-// Zoom 17 pairs well with maxNativeZoom:16 — Leaflet upscales the real zoom-16
-// satellite tile by 2× (barely perceptible softness), which is far more useful
-// for investment inspection than the "Map data not yet available" tiles that
-// Esri returns at zoom 17+ for recently developed RAK coastal areas.
-const DETAIL_ZOOM = 17;
 
 function buildIcon(name: string, active: boolean): L.DivIcon {
   const bg     = active ? "#003D2E"             : "rgba(245,158,11,0.95)";
@@ -184,12 +179,12 @@ export default function PlotMap({
         [selectedPlot.lat!, selectedPlot.lng!],
         {
           radius:      radiusM,
-          color:       "#D97706",   // amber — matches the unselected marker colour
-          weight:      2.5,
-          opacity:     0.85,
+          color:       "#D97706",   // amber — high contrast on satellite imagery
+          weight:      3,
+          opacity:     0.95,
           fillColor:   "#F59E0B",
-          fillOpacity: 0.10,
-          dashArray:   "6 4",      // dashed = approximate indicator, not exact boundary
+          fillOpacity: 0.18,
+          dashArray:   "7 4",      // dashed = approximate indicator, not exact boundary
         }
       ).addTo(mapRef.current);
     }
@@ -208,10 +203,14 @@ export default function PlotMap({
       const id = requestAnimationFrame(() => {
         if (!mapRef.current) return;
         mapRef.current.invalidateSize();
-        mapRef.current.flyTo([lat, lng], DETAIL_ZOOM, {
-          animate: true,
-          duration: 1.2,
-        });
+        if (circleRef.current) {
+          mapRef.current.fitBounds(
+            circleRef.current.getBounds().pad(3.0),
+            { maxZoom: 17, animate: true, duration: 1.3 }
+          );
+        } else {
+          mapRef.current.flyTo([lat, lng], 17, { animate: true, duration: 1.2 });
+        }
       });
       return () => cancelAnimationFrame(id);
     } else if (!compareMode && !selectedPlot) {
