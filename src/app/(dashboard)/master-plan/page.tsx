@@ -1,11 +1,22 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import ContentCard from "@/components/ContentCard";
 import { plots, areas, landCategories, type Plot, formatNumber } from "@/data/mock";
+
+const PlotMap = dynamic(() => import("@/components/PlotMap"), {
+  ssr: false,
+  loading: () => (
+    <div className="absolute inset-0 flex flex-col items-center justify-center bg-mint-white">
+      <div className="w-7 h-7 border-2 border-forest/20 border-t-forest rounded-full animate-spin" />
+      <p className="text-xs text-muted mt-3 tracking-wide">Loading map…</p>
+    </div>
+  ),
+});
 
 function areaSlug(area: string) {
   return area.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
@@ -158,62 +169,55 @@ function MasterPlanContent() {
 
         {/* Map */}
         <div className={`relative bg-mint-white rounded-2xl overflow-hidden border border-mint-light/40 shadow-sm min-h-[250px] md:min-h-0 ${showPanel || showCompare ? "md:w-1/2" : "flex-1"}`}>
-          {/* Grid background */}
-          <div className="absolute inset-0 opacity-10">
-            <svg className="w-full h-full">
-              <defs>
-                <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                  <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#003D2E" strokeWidth="0.5" />
-                </pattern>
-              </defs>
-              <rect width="100%" height="100%" fill="url(#grid)" />
-            </svg>
-          </div>
 
-          {/* Plot indicators */}
-          <div className="absolute inset-4">
-            {filteredPlots.map((plot, i) => {
-              const isSelected = selectedPlot?.id === plot.id;
-              const isCompared = comparePlots.some(p => p.id === plot.id);
-              return (
-                <div
-                  key={plot.id}
-                  onClick={() => handleSelectPlot(plot)}
-                  className={`absolute border-2 rounded-sm flex items-center justify-center cursor-pointer transition-colors ${
-                    isSelected || isCompared
-                      ? "bg-forest border-forest"
-                      : "bg-amber-400/70 border-amber-500 hover:bg-amber-400"
-                  }`}
-                  style={{
-                    width: "100px",
-                    height: "60px",
-                    left: `${12 + (i % 3) * 28}%`,
-                    top: `${18 + Math.floor(i / 3) * 22}%`,
-                  }}
-                >
-                  <div className="text-center">
-                    <span className={`text-[11px] font-bold block ${isSelected || isCompared ? "text-white" : "text-amber-900"}`}>
-                      {plot.name}
-                    </span>
-                    <span className={`text-[9px] ${isSelected || isCompared ? "text-white/70" : "text-amber-800/60"}`}>
-                      {formatNumber(plot.plotArea)} sqft
-                    </span>
-                  </div>
+          {/* Satellite map — fills the container */}
+          <PlotMap
+            plots={filteredPlots}
+            selectedPlot={selectedPlot}
+            comparePlots={comparePlots}
+            compareMode={compareMode}
+            onSelectPlot={handleSelectPlot}
+          />
+
+          {/* Available Plots panel — top-left overlay; click to select + zoom */}
+          {filteredPlots.length > 0 && (
+            <div className="absolute top-3 left-3 z-10">
+              <div className="bg-white/90 backdrop-blur-sm rounded-xl border border-mint-light/40 shadow-sm overflow-hidden">
+                <div className="px-3 pt-2.5 pb-1">
+                  <p className="text-[9px] uppercase tracking-wider text-muted font-semibold">
+                    {compareMode ? `Select Plots (${comparePlots.length}/2)` : "Available Plots"}
+                  </p>
                 </div>
-              );
-            })}
-
-            <div className="absolute left-[3%] top-[18%] text-[10px] text-deep-forest/40 uppercase tracking-wider -rotate-90 origin-left">
-              Main Road
+                <div className="flex flex-col divide-y divide-mint-light/40 max-h-[260px] overflow-y-auto">
+                  {filteredPlots.map(plot => {
+                    const isSelected = selectedPlot?.id === plot.id;
+                    const isCompared = comparePlots.some(p => p.id === plot.id);
+                    const active = isSelected || isCompared;
+                    return (
+                      <button
+                        key={plot.id}
+                        onClick={() => handleSelectPlot(plot)}
+                        className={`w-full text-left px-3 py-2.5 transition-colors ${
+                          active ? "bg-forest" : "bg-transparent hover:bg-mint-bg"
+                        }`}
+                      >
+                        <p className={`text-xs font-semibold ${active ? "text-white" : "text-deep-forest"}`}>
+                          {plot.name}
+                        </p>
+                        <p className={`text-[10px] mt-0.5 ${active ? "text-white/70" : "text-muted"}`}>
+                          {formatNumber(plot.plotArea)} sqft
+                        </p>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
-            <div className="absolute top-[8%] left-[28%] text-[10px] text-deep-forest/40 uppercase tracking-wider">
-              Al Marjan Blvd
-            </div>
-          </div>
+          )}
 
-          {/* Map summary stats — shown when no panel or comparison is open */}
+          {/* Area summary stats — top-right overlay, shown when no side panel */}
           {!showPanel && !showCompare && (
-            <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-xl p-4 text-xs text-deep-forest shadow-sm min-w-[180px]">
+            <div className="absolute top-3 right-3 z-10 bg-white/90 backdrop-blur-sm rounded-xl p-4 text-xs text-deep-forest shadow-sm min-w-[180px]">
               <p className="text-[10px] uppercase tracking-wider text-muted font-semibold mb-2">Area Summary</p>
               <div className="space-y-2">
                 <div className="flex justify-between">
@@ -228,30 +232,15 @@ function MasterPlanContent() {
                   <span className="text-muted">Avg. Price/sqft</span>
                   <span className="font-bold text-deep-forest">AED {formatNumber(Math.round(filteredPlots.reduce((s, p) => s + p.pricePerSqFt, 0) / (filteredPlots.length || 1)))}</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-muted">Price Range</span>
-                  <span className="font-bold text-deep-forest">AED {formatNumber(Math.min(...filteredPlots.map(p => p.pricePerSqFt)))}–{formatNumber(Math.max(...filteredPlots.map(p => p.pricePerSqFt)))}</span>
-                </div>
+                {filteredPlots.length > 0 && (
+                  <div className="flex justify-between">
+                    <span className="text-muted">Price Range</span>
+                    <span className="font-bold text-deep-forest">AED {formatNumber(Math.min(...filteredPlots.map(p => p.pricePerSqFt)))}–{formatNumber(Math.max(...filteredPlots.map(p => p.pricePerSqFt)))}</span>
+                  </div>
+                )}
               </div>
             </div>
           )}
-
-          {/* Legend */}
-          <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm rounded-lg p-3 text-xs text-deep-forest shadow-sm">
-            <p className="font-medium mb-1.5">Legend</p>
-            <div className="flex flex-col gap-1.5">
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 bg-amber-400 border border-amber-500 rounded-sm" />
-                <span>Available Plot</span>
-              </div>
-              {compareMode && (
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 bg-forest border border-forest rounded-sm" />
-                  <span>Selected ({comparePlots.length}/2)</span>
-                </div>
-              )}
-            </div>
-          </div>
         </div>
 
         {/* Plot detail panel — horizontal split */}

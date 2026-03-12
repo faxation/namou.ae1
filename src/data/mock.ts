@@ -22,6 +22,8 @@ export interface Plot {
   infrastructure?: string;
   dimensions?: { width: number; depth: number };
   developmentPotential?: string;
+  lat?: number; // WGS84 latitude (decimal degrees)
+  lng?: number; // WGS84 longitude (decimal degrees)
 }
 
 export interface Landmark {
@@ -97,6 +99,8 @@ export const plots: Plot[] = [
     zoning: "Mixed-use Hospitality",
     infrastructure: "Full road + utilities",
     dimensions: { width: 663, depth: 996 },
+    lat: 25.9655,
+    lng: 55.9575,
   },
   {
     id: "plot-2",
@@ -117,6 +121,8 @@ export const plots: Plot[] = [
     zoning: "Residential",
     infrastructure: "Full road + utilities",
     dimensions: { width: 500, depth: 852 },
+    lat: 25.9672,
+    lng: 55.9608,
   },
   {
     id: "plot-3",
@@ -137,6 +143,8 @@ export const plots: Plot[] = [
     zoning: "Hospitality",
     infrastructure: "Full road + utilities",
     dimensions: { width: 710, depth: 937 },
+    lat: 25.9643,
+    lng: 55.9638,
   },
   {
     id: "plot-4",
@@ -157,6 +165,8 @@ export const plots: Plot[] = [
     zoning: "Convention Center & Hotel",
     infrastructure: "Full road + utilities",
     dimensions: { width: 580, depth: 752 },
+    lat: 25.9632,
+    lng: 55.9655,
   },
   {
     id: "plot-5",
@@ -177,6 +187,8 @@ export const plots: Plot[] = [
     zoning: "Residential / Mixed-use",
     infrastructure: "Full road + utilities",
     dimensions: { width: 620, depth: 835 },
+    lat: 25.9688,
+    lng: 55.9622,
   },
 ];
 
