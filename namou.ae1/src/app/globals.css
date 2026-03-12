@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-forest: #003D2E;
+  --color-deep-forest: #273D37;
+  --color-mint: #87c6ae;
+  --color-mint-light: #b8ddd0;
+  --color-mint-white: #f7fbf8;
+  --color-mint-bg: #e8f4ee;
+  --color-white: #ffffff;
+  --color-foreground: #1a1a1a;
+  --color-muted: #6b7b75;
+
+  --font-heading: "Bahnschrift", "DIN Alternate", "Segoe UI", sans-serif;
+  --font-body: "Graphik Web", "Inter", system-ui, sans-serif;
+}
+
+body {
+  background: var(--color-mint-white);
+  color: var(--color-foreground);
+  font-family: var(--font-body);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+}
