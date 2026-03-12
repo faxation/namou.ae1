@@ -78,25 +78,28 @@ export default function PlotMap({
     // Zoom controls at bottom-right — clear of the Available Plots overlay
     L.control.zoom({ position: "bottomright" }).addTo(map);
 
-    // ── Esri World Imagery — photo-realistic satellite basemap ──────────────
-    // maxNativeZoom: 19  → highest zoom level Esri has real tiles for in UAE/RAK
-    // maxZoom: 22        → at zoom 20-22 Leaflet tiles the zoom-19 imagery scaled
-    //                      up, giving real detail instead of "no data" tiles.
+    // ── CartoDB Voyager — full real-world tile layer ─────────────────────────
+    // Replaces Esri World Imagery which returns "Map data not yet available"
+    // placeholder tiles for Al Marjan Beach District and other RAK areas at
+    // zoom 17+. Esri's raster cache does not fully cover recently developed
+    // coastal areas; it returns an actual tile IMAGE containing that text
+    // (HTTP 200) so maxNativeZoom cannot help — Leaflet has no way to detect
+    // a placeholder and fall back to a lower zoom.
+    //
+    // CartoDB Voyager tiles are vector-rendered on-demand from OpenStreetMap,
+    // guaranteeing full coverage at every zoom level for every area.
+    // Roads, buildings, coastline, water, and labels are all present at zoom 18.
+    // maxNativeZoom: 20  → native tile resolution goes to zoom 20
+    // maxZoom: 22        → Leaflet upscales zoom-20 tiles at 21-22
     L.tileLayer(
-      "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+      "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png",
       {
         attribution:
-          "Tiles &copy; <a href='https://www.esri.com' target='_blank'>Esri</a> &mdash; Esri, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP",
-        maxNativeZoom: 19,
+          "&copy; <a href='https://www.openstreetmap.org/copyright' target='_blank'>OpenStreetMap</a> contributors &copy; <a href='https://carto.com/attributions' target='_blank'>CARTO</a>",
+        subdomains: "abcd",
+        maxNativeZoom: 20,
         maxZoom: 22,
       }
-    ).addTo(map);
-
-    // ── Esri Reference — road names and place labels overlay ────────────────
-    // Same maxNativeZoom/maxZoom so labels remain present at deep zoom levels.
-    L.tileLayer(
-      "https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}",
-      { opacity: 0.85, maxNativeZoom: 19, maxZoom: 22 }
     ).addTo(map);
 
     mapRef.current = map;
