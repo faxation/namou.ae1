@@ -13,9 +13,9 @@ interface Props {
   onSelectPlot: (plot: Plot) => void;
 }
 
-const MAP_CENTER: [number, number] = [25.9655, 55.9622];
-const OVERVIEW_ZOOM = 14;
-const DETAIL_ZOOM = 17;
+const MAP_CENTER: [number, number] = [25.745, 55.855];
+const OVERVIEW_ZOOM = 11;
+const DETAIL_ZOOM = 16;
 
 function buildIcon(name: string, active: boolean): L.DivIcon {
   const bg    = active ? "#003D2E"              : "rgba(245,158,11,0.95)";
@@ -63,20 +63,15 @@ export default function PlotMap({
       attributionControl: true,
     });
 
-    // Esri World Imagery — satellite base layer (free, no API key required)
+    // CartoDB Voyager — roads, buildings, labels (free, no API key required)
     L.tileLayer(
-      "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+      "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
       {
         attribution:
-          "Tiles &copy; <a href='https://www.esri.com' target='_blank'>Esri</a> &mdash; Esri, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP",
+          "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors &copy; <a href='https://carto.com/attributions'>CARTO</a>",
+        subdomains: "abcd",
         maxZoom: 20,
       }
-    ).addTo(map);
-
-    // Esri Reference — road names + place labels overlay
-    L.tileLayer(
-      "https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}",
-      { opacity: 0.9, maxZoom: 20 }
     ).addTo(map);
 
     mapRef.current = map;
