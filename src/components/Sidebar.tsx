@@ -135,7 +135,7 @@ export default function Sidebar() {
     <>
       {/* Mobile top bar */}
       <div className="md:hidden flex items-center justify-between bg-forest text-white px-4 py-3 shrink-0">
-        <Link href="/" className="flex items-center">
+        <Link href="/home" className="flex items-center">
           <Image
             src="/logo-sidebar.png"
             alt="Namou"
@@ -163,7 +163,7 @@ export default function Sidebar() {
         <div className="md:hidden fixed inset-0 z-50 flex">
           <div className="absolute inset-0 bg-deep-forest/60 backdrop-blur-sm" onClick={() => setMobileOpen(false)} />
           <div className="relative w-64 bg-forest text-white py-6 flex flex-col animate-fade-in">
-            <Link href="/" className="mb-6 px-4 flex items-center" onClick={() => setMobileOpen(false)}>
+            <Link href="/home" className="mb-6 px-4 flex items-center" onClick={() => setMobileOpen(false)}>
               <Image
                 src="/logo-sidebar.png"
                 alt="Namou"
@@ -181,7 +181,7 @@ export default function Sidebar() {
       {/* Desktop sidebar */}
       <aside className="group hidden md:flex flex-col w-[42px] lg:w-[52px] hover:w-[200px] min-h-screen bg-forest text-white py-4 lg:py-8 shrink-0 overflow-hidden transition-[width] duration-200 ease-in-out">
         {/* Logo */}
-        <Link href="/" className="mb-4 lg:mb-10 px-2 flex items-center">
+        <Link href="/home" className="mb-4 lg:mb-10 px-2 flex items-center">
           {/* Collapsed: small square crop; expanded: full logo */}
           <div className="w-[36px] group-hover:w-[168px] transition-[width] duration-200 ease-in-out overflow-hidden shrink-0">
             <Image

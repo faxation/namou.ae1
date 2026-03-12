@@ -16,7 +16,7 @@ function OtherAreasContent() {
   const ctxArea = searchParams.get("area");
 
   if (!ctxType) {
-    return <p className="text-sm text-muted">No land type context. Start from the <Link href="/" className="text-forest hover:underline">home page</Link>.</p>;
+    return <p className="text-sm text-muted">No land type context. Start from the <Link href="/home" className="text-forest hover:underline">home page</Link>.</p>;
   }
 
   const category = landCategories.find((c) => c.slug === ctxType);

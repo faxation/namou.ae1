@@ -44,7 +44,7 @@ export default function LoginPage() {
       "namou_session",
       JSON.stringify({ username: match.username, clientType })
     );
-    router.push("/");
+    router.push("/home");
   }
 
   const inputCls =
