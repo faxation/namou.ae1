@@ -127,6 +127,7 @@ export default function PlotMap({
           zoomOffset:    -1,
           maxNativeZoom: 22,
           maxZoom:       22,
+          keepBuffer:    3,  // pre-fetch one extra tile ring — reduces blank-tile flash on pan
         }
       ).addTo(map);
     } else {
@@ -139,6 +140,7 @@ export default function PlotMap({
             "Esri, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP",
           maxNativeZoom: 16,
           maxZoom:       22,
+          keepBuffer:    3,
         }
       ).addTo(map);
 
@@ -147,7 +149,7 @@ export default function PlotMap({
       // Omitted in the Mapbox branch (labels are included in satellite-streets).
       L.tileLayer(
         "https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}",
-        { opacity: 0.9, maxNativeZoom: 16, maxZoom: 22 }
+        { opacity: 0.9, maxNativeZoom: 16, maxZoom: 22, keepBuffer: 3 }
       ).addTo(map);
     }
 
@@ -270,15 +272,19 @@ export default function PlotMap({
 
   // ── Pan/zoom to selected plot (or return to overview) ────────────────────
   //
-  // Uses fitBounds(circle.getBounds().pad(3.0)) so each plot is framed at
-  // the optimal zoom for its physical size — large beach-district plots land
-  // at ~zoom 16.5 (near-native satellite quality with wide context), small
-  // plots cap at maxZoom.
+  // Uses fitBounds(circle.getBounds().pad(1.0)) so each plot is framed at
+  // the highest useful zoom for its physical size:
+  //   - Large plots (AMBD North Bay, R≈65m) → padded span ~390m → zoom ~17.5
+  //   - Small plots (Maireed RP-02, R≈13m)  → padded span ~76m  → zoom ~19
+  //
+  // pad(1.0) = 100% padding on each side (span = 3× circle diameter).
+  // This keeps the plot prominent while showing ~1–2 blocks of context,
+  // matching the level of detail in the reference satellite screenshot.
   //
   // maxZoom for fitBounds:
-  //   Mapbox: 19 — genuine high-detail imagery at this zoom for UAE
+  //   Mapbox: 19 — genuine Maxar high-detail imagery at this zoom for UAE
   //   Esri fallback: 17 — beyond this Leaflet upscales zoom-16 tiles; no
-  //                       additional detail is gained by going higher
+  //                       additional real-world detail is gained by going higher
   useEffect(() => {
     if (!mapReady || !mapRef.current) return;
 
@@ -293,7 +299,7 @@ export default function PlotMap({
         mapRef.current.invalidateSize();
         if (circleRef.current) {
           mapRef.current.fitBounds(
-            circleRef.current.getBounds().pad(3.0),
+            circleRef.current.getBounds().pad(1.0),
             { maxZoom: HAS_MAPBOX ? 19 : 17, animate: true, duration: 1.3 }
           );
         } else {
