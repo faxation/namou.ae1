@@ -49,36 +49,6 @@ const actions = [
     hasCalendar: true,
   },
   {
-    title: "Submit an Offer",
-    description: "Lock in your land price and generate a secure deal link.",
-    href: "/offer",
-    icon: (
-      <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-        <path d="M22 11.08V12a10 10 0 11-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" />
-      </svg>
-    ),
-    primary: true,
-    timeline: "Instant confirmation",
-    prep: "Complete the ROI Simulator first for best results",
-    details: "Your offer is reviewed within 2 business hours. A dedicated closing manager handles all documentation.",
-  },
-  {
-    title: "Sign Agreement",
-    description: "Formalise your investment with a Property Introduction Form or A2A Agreement.",
-    href: "/agreement",
-    icon: (
-      <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
-        <polyline points="14 2 14 8 20 8" />
-        <line x1="16" y1="13" x2="8" y2="13" />
-        <line x1="16" y1="17" x2="8" y2="17" />
-      </svg>
-    ),
-    timeline: "Digital signature in minutes",
-    prep: "Select a plot from Master Plan first",
-    details: "Choose between a Property Introduction Form or an Agent-to-Agent Agreement, sign digitally, and submit.",
-  },
-  {
     title: "Receive Brochures & ROI Calculations",
     description: "Get detailed property brochures and personalised ROI reports sent to your inbox.",
     href: "#",
@@ -229,9 +199,7 @@ export default function CTAPage() {
         {actions.map((action) => {
           const inner = (
             <ContentCard
-              className={`w-full flex flex-col transition-all group-hover:shadow-md group-hover:border-forest/30 ${
-                action.primary ? "border-forest/40" : ""
-              }`}
+              className="w-full flex flex-col transition-all group-hover:shadow-md group-hover:border-forest/30"
             >
               <div className="flex items-start gap-5">
                 <div className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 bg-forest/10 text-forest">
