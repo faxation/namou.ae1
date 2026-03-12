@@ -18,9 +18,9 @@ const OVERVIEW_ZOOM = 11;
 const DETAIL_ZOOM = 16;
 
 function buildIcon(name: string, active: boolean): L.DivIcon {
-  const bg    = active ? "#003D2E"              : "rgba(245,158,11,0.95)";
-  const bdr   = active ? "#002A1F"              : "#D97706";
-  const color = active ? "#ffffff"              : "#78350F";
+  const bg     = active ? "#003D2E"             : "rgba(245,158,11,0.95)";
+  const bdr    = active ? "#002A1F"             : "#D97706";
+  const color  = active ? "#ffffff"             : "#78350F";
   const shadow = active
     ? "0 3px 12px rgba(0,61,46,0.55)"
     : "0 2px 10px rgba(0,0,0,0.40)";
@@ -63,21 +63,36 @@ export default function PlotMap({
       attributionControl: true,
     });
 
-    // CartoDB Voyager — roads, buildings, labels (free, no API key required)
+    // Esri World Imagery — photo-realistic satellite base layer (free, no API key)
     L.tileLayer(
-      "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+      "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
       {
         attribution:
-          "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors &copy; <a href='https://carto.com/attributions'>CARTO</a>",
-        subdomains: "abcd",
+          "Tiles &copy; <a href='https://www.esri.com' target='_blank'>Esri</a> &mdash; Esri, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP",
         maxZoom: 20,
       }
+    ).addTo(map);
+
+    // Esri Reference — road names + place labels overlay on top of satellite
+    L.tileLayer(
+      "https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}",
+      { opacity: 0.85, maxZoom: 20 }
     ).addTo(map);
 
     mapRef.current = map;
     setMapReady(true);
 
+    // ── ResizeObserver: tell Leaflet whenever the container changes size ──
+    // This is critical: when the detail panel opens the map container shrinks
+    // from full-width to md:w-1/2. Without this, Leaflet's internal viewport
+    // cache is stale and flyTo centers on the wrong point.
+    const ro = new ResizeObserver(() => {
+      if (mapRef.current) mapRef.current.invalidateSize();
+    });
+    ro.observe(containerRef.current);
+
     return () => {
+      ro.disconnect();
       map.remove();
       mapRef.current = null;
       markersRef.current.clear();
@@ -113,18 +128,22 @@ export default function PlotMap({
   // ── Pan/zoom to selected plot (or return to overview) ───────────────────
   useEffect(() => {
     if (!mapReady || !mapRef.current) return;
+    const map = mapRef.current;
 
     if (!compareMode && selectedPlot?.lat != null && selectedPlot?.lng != null) {
-      mapRef.current.flyTo(
+      // invalidateSize() ensures Leaflet knows the current container dimensions
+      // before flying. This is essential when the detail panel has just opened
+      // and the map container has resized — without it flyTo centres on stale
+      // (full-width) dimensions and the pin appears off-centre.
+      map.invalidateSize();
+      map.flyTo(
         [selectedPlot.lat, selectedPlot.lng],
         DETAIL_ZOOM,
         { animate: true, duration: 1.2 }
       );
     } else if (!compareMode && !selectedPlot) {
-      mapRef.current.flyTo(MAP_CENTER, OVERVIEW_ZOOM, {
-        animate: true,
-        duration: 1.0,
-      });
+      map.invalidateSize();
+      map.flyTo(MAP_CENTER, OVERVIEW_ZOOM, { animate: true, duration: 1.0 });
     }
   }, [mapReady, selectedPlot, compareMode]);
 
