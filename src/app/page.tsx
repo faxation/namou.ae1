@@ -32,7 +32,14 @@ export default function LandingPage() {
     : [];
 
   return (
-    <div className="relative flex flex-col min-h-screen overflow-x-hidden bg-[#F5F2EC]">
+    <div className="relative flex flex-col min-h-screen overflow-x-hidden">
+      {/* Background image */}
+      <div
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: "url('/rak-hero.jpg')" }}
+      />
+      {/* Dark overlay for readability */}
+      <div className="absolute inset-0 bg-deep-forest/40" />
 
       {/* Top bar */}
       <header className="relative z-10 flex items-center justify-center px-4 sm:px-12 py-4 sm:py-6">
