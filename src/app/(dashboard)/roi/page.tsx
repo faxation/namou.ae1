@@ -287,30 +287,28 @@ export default function ROIPage() {
         <div className="shrink-0 flex flex-col gap-1">
 
           {/* Active scenario info */}
-          <div className="bg-mint-bg/50 rounded-xl px-4 py-1 border border-mint-light/40 shrink-0">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span className="text-xs text-muted">Active:</span>
-                <span className="text-sm font-bold text-forest">{SCENARIO_META[activeScenario].label}</span>
-                <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${SCENARIO_META[activeScenario].riskColor}`}>{SCENARIO_META[activeScenario].riskLevel}</span>
-              </div>
-              {isCompareMode && (
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-1.5">
-                    <span className="w-2.5 h-2.5 rounded-full bg-forest" />
-                    <span className="text-xs font-semibold text-forest">{comparePlots[0].name}</span>
-                    <span className="text-[10px] text-muted">{comparePlots[0].area}</span>
-                  </div>
-                  <span className="text-muted text-[10px]">vs</span>
-                  <div className="flex items-center gap-1.5">
-                    <span className="w-2.5 h-2.5 rounded-full bg-blue-700" />
-                    <span className="text-xs font-semibold text-blue-700">{comparePlots[1].name}</span>
-                    <span className="text-[10px] text-muted">{comparePlots[1].area}</span>
-                  </div>
-                </div>
-              )}
+          <div className="bg-mint-bg/50 rounded-lg px-4 py-0.5 border border-mint-light/40 shrink-0 flex items-center justify-between gap-4">
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-muted">Active:</span>
+              <span className="text-sm font-bold text-forest">{SCENARIO_META[activeScenario].label}</span>
+              <span className={`text-[10px] font-semibold px-1.5 py-0 rounded-full ${SCENARIO_META[activeScenario].riskColor}`}>{SCENARIO_META[activeScenario].riskLevel}</span>
+              <span className="text-[10px] text-muted">— {SCENARIO_META[activeScenario].description}</span>
             </div>
-            <p className="text-xs text-muted mt-1">{SCENARIO_META[activeScenario].description}</p>
+            {isCompareMode && (
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-forest" />
+                  <span className="text-[10px] font-semibold text-forest">{comparePlots[0].name}</span>
+                  <span className="text-[9px] text-muted">{comparePlots[0].area}</span>
+                </div>
+                <span className="text-muted text-[9px]">vs</span>
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-blue-700" />
+                  <span className="text-[10px] font-semibold text-blue-700">{comparePlots[1].name}</span>
+                  <span className="text-[9px] text-muted">{comparePlots[1].area}</span>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Input variables */}
