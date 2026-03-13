@@ -580,11 +580,11 @@ export default function ROIPage() {
           {isCompareMode && results2 && inputs2 && (
             <>
               {/* Detailed comparison table */}
-              <ContentCard className="flex-1 min-h-0 overflow-y-auto py-2 px-4">
+              <ContentCard className="flex-1 min-h-0 overflow-y-auto py-1 px-4">
                 <div className="grid gap-0" style={{ gridTemplateColumns: "1fr 1fr 1fr" }}>
-                  <div className="py-1 text-[11px] font-semibold text-muted">Metric</div>
-                  <div className="py-1 text-[11px] font-semibold text-forest text-right">{comparePlots[0].name}</div>
-                  <div className="py-1 text-[11px] font-semibold text-blue-700 text-right">{comparePlots[1].name}</div>
+                  <div className="py-0.5 text-[11px] font-semibold text-muted">Metric</div>
+                  <div className="py-0.5 text-[11px] font-semibold text-forest text-right">{comparePlots[0].name}</div>
+                  <div className="py-0.5 text-[11px] font-semibold text-blue-700 text-right">{comparePlots[1].name}</div>
 
                   {[
                     { label: "Plot Size", v1: `${formatNumber(inputs.plotSize)} sqft`, v2: `${formatNumber(inputs2.plotSize)} sqft`, section: "Fixed (Per Plot)" },
@@ -606,7 +606,7 @@ export default function ROIPage() {
                 </div>
 
                 {/* Offer Simulator button */}
-                <div className="flex justify-end mt-3 pt-3 border-t border-mint-light/40">
+                <div className="flex justify-end mt-1 pt-1 border-t border-mint-light/40">
                   <button
                     onClick={() => {
                       sessionStorage.setItem("roi_results", JSON.stringify({ inputs, results, activeScenario }));
