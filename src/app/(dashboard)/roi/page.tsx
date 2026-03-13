@@ -301,22 +301,6 @@ export default function ROIPage() {
           {/* Input variables */}
           {isCompareMode && inputs2 && results2 ? (
           <ContentCard className="flex flex-col overflow-y-auto min-h-0">
-            {/* Fixed per-plot data */}
-            <div className="mb-3">
-              <div className="flex items-center justify-between mb-1.5">
-                <p className="text-[10px] uppercase tracking-widest text-muted font-semibold">Fixed (Per Plot)</p>
-                <div className="flex items-center gap-4 text-[10px] font-medium">
-                  <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-forest" /><span className="text-forest">{comparePlots[0].name}</span></span>
-                  <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-[#3b82f6]" /><span className="text-[#3b82f6]">{comparePlots[1].name}</span></span>
-                </div>
-              </div>
-              <div className="bg-mint-bg/30 rounded-lg px-3 divide-y divide-mint-light/40">
-                <DualFixedRow label="Plot Size" v1={`${formatNumber(inputs.plotSize)} sqft`} v2={`${formatNumber(inputs2.plotSize)} sqft`} />
-                <DualFixedRow label="FAR" v1={`${inputs.gfaRatio}×`} v2={`${inputs2.gfaRatio}×`} />
-                <DualFixedRow label="GFA" v1={`${formatNumber(Math.round(results.gfa))} sqft`} v2={`${formatNumber(Math.round(results2.gfa))} sqft`} computed />
-              </div>
-            </div>
-
             {/* Shared variable inputs — 2-column grid */}
             <p className="text-[10px] uppercase tracking-widest text-muted font-semibold mb-1">Shared Variables</p>
             <div className="grid grid-cols-2 gap-x-6 flex-1">
@@ -596,6 +580,9 @@ export default function ROIPage() {
                   <div className="py-1 text-[11px] font-semibold text-blue-700 text-right">{comparePlots[1].name}</div>
 
                   {[
+                    { label: "Plot Size", v1: `${formatNumber(inputs.plotSize)} sqft`, v2: `${formatNumber(inputs2.plotSize)} sqft`, section: "Fixed (Per Plot)" },
+                    { label: "FAR", v1: `${inputs.gfaRatio}×`, v2: `${inputs2.gfaRatio}×` },
+                    { label: "GFA", v1: `${formatNumber(Math.round(results.gfa))} sqft`, v2: `${formatNumber(Math.round(results2.gfa))} sqft` },
                     { label: "NSA", v1: `${formatNumber(Math.round(results.nsa))} sqft`, v2: `${formatNumber(Math.round(results2.nsa))} sqft`, section: "Development" },
                     { label: "Return on Cost", v1: `${results.returnOnCost.toFixed(1)}%`, v2: `${results2.returnOnCost.toFixed(1)}%`, section: "Investor Metrics" },
                     { label: "GDV Multiple", v1: `${results.gdvMultiple.toFixed(2)}×`, v2: `${results2.gdvMultiple.toFixed(2)}×` },
