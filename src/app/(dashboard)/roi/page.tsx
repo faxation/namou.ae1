@@ -281,10 +281,10 @@ export default function ROIPage() {
       </div>
 
       {/* ── Top/bottom: top = variables, bottom = results ── */}
-      <div className="flex-1 min-h-0 flex flex-col gap-2 lg:gap-4 overflow-hidden">
+      <div className={`flex-1 min-h-0 flex ${isCompareMode ? "flex-row" : "flex-col"} gap-2 lg:gap-4 overflow-hidden`}>
 
-        {/* ═══════════ TOP: Variables ═══════════ */}
-        <div className="shrink-0 flex flex-col gap-2">
+        {/* ═══════════ TOP / LEFT: Variables ═══════════ */}
+        <div className={isCompareMode ? "w-1/2 flex flex-col gap-2 min-h-0 overflow-y-auto" : "shrink-0 flex flex-col gap-2"}>
 
           {/* Active scenario info */}
           <div className="bg-mint-bg/50 rounded-xl px-4 py-2 border border-mint-light/40 shrink-0">
@@ -470,8 +470,8 @@ export default function ROIPage() {
 
         </div>
 
-        {/* ═══════════ BOTTOM: Results ═══════════ */}
-        <div className="flex-1 flex flex-col gap-2 lg:gap-3 min-h-0 overflow-hidden">
+        {/* ═══════════ BOTTOM / RIGHT: Results ═══════════ */}
+        <div className={isCompareMode ? "w-1/2 flex flex-col gap-2 lg:gap-3 min-h-0 overflow-y-auto" : "flex-1 flex flex-col gap-2 lg:gap-3 min-h-0 overflow-hidden"}>
 
           {/* ── Single-plot results ── */}
           {!isCompareMode && (
