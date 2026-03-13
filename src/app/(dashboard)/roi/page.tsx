@@ -387,15 +387,12 @@ export default function ROIPage() {
                   <p className="text-[10px] uppercase tracking-widest text-muted font-semibold mb-1">Construction</p>
                   <NumInput label="Cost / GFA sqft" value={inputs.constructionCostPerGFA} unit="AED" prefix onChange={v => update("constructionCostPerGFA", v)} />
                   <NumInput label="Soft Cost" value={inputs.softCostPct} unit="%" suffix onChange={v => update("softCostPct", v)} />
-                </div>
-              </div>
-              {/* Right: Design + Sales */}
-              <div className="flex flex-col gap-2">
-                <div>
-                  <p className="text-[10px] uppercase tracking-widest text-muted font-semibold mb-1">Design</p>
                   <NumInput label="Efficiency (NSA / GFA)" value={inputs.efficiency} unit="%" suffix onChange={v => update("efficiency", v)} />
                 </div>
-                <div className="pt-2 border-t border-mint-light/40">
+              </div>
+              {/* Right: Sales */}
+              <div className="flex flex-col gap-2">
+                <div>
                   <p className="text-[10px] uppercase tracking-widest text-muted font-semibold mb-1">Sales</p>
                   <NumInput label="Selling Price / NSA" value={inputs.sellingPricePerNSA} unit="AED" prefix onChange={v => update("sellingPricePerNSA", v)} />
                 </div>
