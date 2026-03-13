@@ -18,7 +18,7 @@ export default function LandingPage() {
   /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     if (!sessionStorage.getItem("namou_session")) {
-      router.replace("/login");
+      router.replace("/client");
     } else {
       setChecked(true);
     }

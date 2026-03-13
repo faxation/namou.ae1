@@ -463,10 +463,10 @@ export default function AgreementPage() {
       if (raw) {
         setClientType(JSON.parse(raw).clientType ?? null);
       } else {
-        router.replace("/login");
+        router.replace("/client");
       }
     } catch {
-      router.replace("/login");
+      router.replace("/client");
     }
   }, [router]);
   /* eslint-enable react-hooks/set-state-in-effect */
