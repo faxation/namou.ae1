@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { plots } from "@/data/mock";
 
@@ -29,108 +29,6 @@ function getSelectedPlots() {
     }
   } catch { /* ignore */ }
   return [];
-}
-
-/* ── Signature Pad ── */
-function SignaturePad({
-  onEnd,
-  clearRef,
-}: {
-  onEnd: (dataUrl: string) => void;
-  clearRef: React.MutableRefObject<(() => void) | null>;
-}) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const drawing = useRef(false);
-  const hasStrokes = useRef(false);
-
-  const setupCtx = useCallback((ctx: CanvasRenderingContext2D) => {
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
-    ctx.lineWidth = 2;
-    ctx.strokeStyle = "#003D2E";
-  }, []);
-
-  const resize = useCallback(() => {
-    const c = canvasRef.current;
-    if (!c) return;
-    const ctx = c.getContext("2d");
-    if (!ctx) return;
-    let savedImg: ImageData | null = null;
-    if (hasStrokes.current) {
-      savedImg = ctx.getImageData(0, 0, c.width, c.height);
-    }
-    const rect = c.getBoundingClientRect();
-    c.width = rect.width * 2;
-    c.height = rect.height * 2;
-    ctx.scale(2, 2);
-    setupCtx(ctx);
-    if (savedImg) ctx.putImageData(savedImg, 0, 0);
-  }, [setupCtx]);
-
-  useEffect(() => {
-    resize();
-    window.addEventListener("resize", resize);
-    return () => window.removeEventListener("resize", resize);
-  }, [resize]);
-
-  useEffect(() => {
-    clearRef.current = () => {
-      const c = canvasRef.current;
-      if (!c) return;
-      const ctx = c.getContext("2d");
-      if (ctx) ctx.clearRect(0, 0, c.width, c.height);
-      hasStrokes.current = false;
-      resize();
-      onEnd("");
-    };
-  }, [resize, onEnd, clearRef]);
-
-  function getPos(e: React.MouseEvent | React.TouchEvent) {
-    const c = canvasRef.current!;
-    const rect = c.getBoundingClientRect();
-    if ("touches" in e && e.touches.length > 0) {
-      return { x: e.touches[0].clientX - rect.left, y: e.touches[0].clientY - rect.top };
-    }
-    return { x: (e as React.MouseEvent).clientX - rect.left, y: (e as React.MouseEvent).clientY - rect.top };
-  }
-
-  function start(e: React.MouseEvent | React.TouchEvent) {
-    drawing.current = true;
-    hasStrokes.current = true;
-    const ctx = canvasRef.current?.getContext("2d");
-    if (!ctx) return;
-    const { x, y } = getPos(e);
-    ctx.beginPath();
-    ctx.moveTo(x, y);
-  }
-
-  function move(e: React.MouseEvent | React.TouchEvent) {
-    if (!drawing.current) return;
-    const ctx = canvasRef.current?.getContext("2d");
-    if (!ctx) return;
-    const { x, y } = getPos(e);
-    ctx.lineTo(x, y);
-    ctx.stroke();
-  }
-
-  function end() {
-    drawing.current = false;
-    if (canvasRef.current) onEnd(canvasRef.current.toDataURL("image/png"));
-  }
-
-  return (
-    <canvas
-      ref={canvasRef}
-      onMouseDown={start}
-      onMouseMove={move}
-      onMouseUp={end}
-      onMouseLeave={end}
-      onTouchStart={start}
-      onTouchMove={move}
-      onTouchEnd={end}
-      className="w-full h-full cursor-crosshair touch-none"
-    />
-  );
 }
 
 /* ── Shared UI ── */
@@ -168,10 +66,8 @@ function PropertyIntroductionForm() {
   /* eslint-enable react-hooks/set-state-in-effect */
 
   const [form, setForm] = useState({ fullName: "", mobile: "", email: "", passportId: "", city: "", country: "" });
-  const [signature, setSignature] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [errors, setErrors] = useState<Record<string, boolean>>({});
-  const clearSig = useRef<(() => void) | null>(null);
 
   function set(field: string, value: string) {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -203,7 +99,7 @@ function PropertyIntroductionForm() {
         </div>
         <h3 className="text-lg font-bold text-forest mb-1">Submitted</h3>
         <p className="text-xs text-muted max-w-xs">Your Property Introduction Form has been submitted. A specialist will be in touch shortly.</p>
-        <button onClick={() => { setSubmitted(false); setForm({ fullName: "", mobile: "", email: "", passportId: "", city: "", country: "" }); setSignature(""); clearSig.current?.(); }} className="mt-4 px-6 py-2 bg-forest text-white rounded-lg text-xs font-semibold hover:bg-deep-forest transition-colors">
+        <button onClick={() => { setSubmitted(false); setForm({ fullName: "", mobile: "", email: "", passportId: "", city: "", country: "" }); }} className="mt-4 px-6 py-2 bg-forest text-white rounded-lg text-xs font-semibold hover:bg-deep-forest transition-colors">
           Submit Another
         </button>
       </div>
@@ -282,10 +178,8 @@ function A2AForm() {
   /* eslint-enable react-hooks/set-state-in-effect */
 
   const [form, setForm] = useState({ companyName: "", address: "", tradeLicense: "", contactPerson: "", phone: "", email: "", investorName: "", investorPhone: "", investorEmail: "" });
-  const [signature, setSignature] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [errors, setErrors] = useState<Record<string, boolean>>({});
-  const clearSig = useRef<(() => void) | null>(null);
 
   function set(field: string, value: string) {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -320,7 +214,7 @@ function A2AForm() {
         </div>
         <h3 className="text-lg font-bold text-forest mb-1">Submitted</h3>
         <p className="text-xs text-muted max-w-xs">Your A2A Agreement has been submitted. A representative will review and countersign shortly.</p>
-        <button onClick={() => { setSubmitted(false); setForm({ companyName: "", address: "", tradeLicense: "", contactPerson: "", phone: "", email: "", investorName: "", investorPhone: "", investorEmail: "" }); setSignature(""); clearSig.current?.(); }} className="mt-4 px-6 py-2 bg-forest text-white rounded-lg text-xs font-semibold hover:bg-deep-forest transition-colors">
+        <button onClick={() => { setSubmitted(false); setForm({ companyName: "", address: "", tradeLicense: "", contactPerson: "", phone: "", email: "", investorName: "", investorPhone: "", investorEmail: "" }); }} className="mt-4 px-6 py-2 bg-forest text-white rounded-lg text-xs font-semibold hover:bg-deep-forest transition-colors">
           Submit Another
         </button>
       </div>

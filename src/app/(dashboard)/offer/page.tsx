@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useRef, useEffect, useCallback } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import ContentCard from "@/components/ContentCard";
 import { plots, formatNumber, type Plot } from "@/data/mock";
@@ -60,60 +60,6 @@ function inputCls(error?: boolean) {
   }`;
 }
 
-function SignaturePad({ onEnd, clearRef }: { onEnd: (dataUrl: string) => void; clearRef: React.MutableRefObject<(() => void) | null> }) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const drawing = useRef(false);
-  const hasStrokes = useRef(false);
-
-  const setupCtx = useCallback((ctx: CanvasRenderingContext2D) => {
-    ctx.lineCap = "round"; ctx.lineJoin = "round"; ctx.lineWidth = 2; ctx.strokeStyle = "#003D2E";
-  }, []);
-
-  const resize = useCallback(() => {
-    const c = canvasRef.current; if (!c) return;
-    const ctx = c.getContext("2d"); if (!ctx) return;
-    let savedImg: ImageData | null = null;
-    if (hasStrokes.current) savedImg = ctx.getImageData(0, 0, c.width, c.height);
-    const rect = c.getBoundingClientRect();
-    c.width = rect.width * 2; c.height = rect.height * 2;
-    ctx.scale(2, 2); setupCtx(ctx);
-    if (savedImg) ctx.putImageData(savedImg, 0, 0);
-  }, [setupCtx]);
-
-  useEffect(() => { resize(); window.addEventListener("resize", resize); return () => window.removeEventListener("resize", resize); }, [resize]);
-
-  useEffect(() => {
-    clearRef.current = () => {
-      const c = canvasRef.current; if (!c) return;
-      const ctx = c.getContext("2d"); if (ctx) ctx.clearRect(0, 0, c.width, c.height);
-      hasStrokes.current = false; resize(); onEnd("");
-    };
-  }, [resize, onEnd, clearRef]);
-
-  function getPos(e: React.MouseEvent | React.TouchEvent) {
-    const c = canvasRef.current!; const rect = c.getBoundingClientRect();
-    if ("touches" in e && e.touches.length > 0) return { x: e.touches[0].clientX - rect.left, y: e.touches[0].clientY - rect.top };
-    return { x: (e as React.MouseEvent).clientX - rect.left, y: (e as React.MouseEvent).clientY - rect.top };
-  }
-
-  function start(e: React.MouseEvent | React.TouchEvent) {
-    drawing.current = true; hasStrokes.current = true;
-    const ctx = canvasRef.current?.getContext("2d"); if (!ctx) return;
-    const { x, y } = getPos(e); ctx.beginPath(); ctx.moveTo(x, y);
-  }
-  function move(e: React.MouseEvent | React.TouchEvent) {
-    if (!drawing.current) return;
-    const ctx = canvasRef.current?.getContext("2d"); if (!ctx) return;
-    const { x, y } = getPos(e); ctx.lineTo(x, y); ctx.stroke();
-  }
-  function end() { drawing.current = false; if (canvasRef.current) onEnd(canvasRef.current.toDataURL("image/png")); }
-
-  return (
-    <canvas ref={canvasRef} onMouseDown={start} onMouseMove={move} onMouseUp={end} onMouseLeave={end}
-      onTouchStart={start} onTouchMove={move} onTouchEnd={end} className="w-full h-full cursor-crosshair touch-none" />
-  );
-}
-
 /* ── Next Steps Modal ── */
 
 function NextStepsModal({ onClose, plotName, enableOfferWebhook = false }: { onClose: () => void; plotName: string; enableOfferWebhook?: boolean }) {
@@ -129,12 +75,10 @@ function NextStepsModal({ onClose, plotName, enableOfferWebhook = false }: { onC
   // A2A form state (Broker)
   const [a2aForm, setA2aForm] = useState({ companyName: "", address: "", tradeLicense: "", contactPerson: "", phone: "", email: "", investorName: "", investorPhone: "", investorEmail: "" });
 
-  const [signature, setSignature] = useState("");
   const [errors, setErrors] = useState<Record<string, boolean>>({});
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const clearSig = useRef<(() => void) | null>(null);
 
   function setPi(field: string, value: string) {
     setPiForm((prev) => ({ ...prev, [field]: value }));
@@ -167,7 +111,6 @@ function NextStepsModal({ onClose, plotName, enableOfferWebhook = false }: { onC
       if (!piForm.city.trim()) errs.city = true;
       if (!piForm.country.trim()) errs.country = true;
     }
-    if (!signature) errs.signature = true;
     setErrors(errs);
     return Object.keys(errs).length === 0;
   }
@@ -381,18 +324,6 @@ function NextStepsModal({ onClose, plotName, enableOfferWebhook = false }: { onC
                 </Field>
               </div>
             )}
-
-            {/* Signature */}
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <p className="text-[9px] uppercase tracking-widest text-muted font-semibold">{isBroker ? "Signature (Party B)" : "Signature"}</p>
-                <button type="button" onClick={() => clearSig.current?.()} className="text-[10px] text-forest hover:text-deep-forest transition-colors font-medium">Clear</button>
-              </div>
-              <div className={`w-full h-24 border-2 border-dashed rounded-lg overflow-hidden ${errors.signature ? "border-red-400 bg-red-50/30" : "border-mint-light bg-white"}`}>
-                <SignaturePad onEnd={setSignature} clearRef={clearSig} />
-              </div>
-              {errors.signature && <p className="text-[10px] text-red-500 mt-0.5">Signature is required</p>}
-            </div>
 
             {/* Error message */}
             {submitError && (
