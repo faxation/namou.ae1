@@ -513,8 +513,8 @@ export default function FinalOfferPage() {
               <p className="text-xs uppercase tracking-wider text-muted font-semibold mb-3">What Happens Next</p>
               <div className="space-y-3">
                 {[
-                  { step: "1", text: "Offer reviewed within 2 business hours" },
-                  { step: "2", text: "Dedicated closing manager assigned" },
+                  { step: "1", text: "Offer reviewed within 3-5 business days" },
+                  { step: "2", text: "Dedicated Offer Manager assigned" },
                   { step: "3", text: "Deal documentation prepared for e-signing" },
                   { step: "4", text: "Secure payment link generated" },
                 ].map((item) => (
