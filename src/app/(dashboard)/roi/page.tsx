@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import React from "react";
 import ContentCard from "@/components/ContentCard";
@@ -170,6 +170,18 @@ export default function ROIPage() {
   const [sourcePlot, setSourcePlot] = useState<Plot | null>(() => loadInitialROIState().sourcePlot);
   const [comparePlots, setComparePlots] = useState<Plot[]>(() => loadInitialROIState().comparePlots);
   const [showPlotPicker, setShowPlotPicker] = useState(false);
+  const [pickerPos, setPickerPos] = useState<{ left: number; bottom: number } | null>(null);
+  const compareBtnRef = useRef<HTMLButtonElement>(null);
+
+  const openPlotPicker = useCallback(() => {
+    setShowPlotPicker(v => {
+      if (!v && compareBtnRef.current) {
+        const rect = compareBtnRef.current.getBoundingClientRect();
+        setPickerPos({ left: rect.left, bottom: window.innerHeight - rect.top + 8 });
+      }
+      return !v;
+    });
+  }, []);
 
   const isCompareMode = comparePlots.length === 2;
 
@@ -523,16 +535,20 @@ export default function ROIPage() {
 
                 {/* Actions */}
                 <div className="flex justify-between mt-2 pt-2 border-t border-mint-light/40 relative">
-                  <div className="relative">
+                  <div>
                     <button
-                      onClick={() => setShowPlotPicker(v => !v)}
+                      ref={compareBtnRef}
+                      onClick={openPlotPicker}
                       className="flex items-center gap-2 px-4 py-2.5 border border-forest/30 text-forest rounded-xl font-medium text-sm hover:bg-mint-bg transition-colors"
                     >
                       <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /><rect x="14" y="14" width="7" height="7" /></svg>
                       Compare Plots
                     </button>
-                    {showPlotPicker && (
-                      <div className="absolute bottom-full left-0 mb-2 z-50 bg-white border border-mint-light rounded-2xl shadow-lg p-4 min-w-[260px]">
+                    {showPlotPicker && pickerPos && (
+                      <div
+                        className="fixed z-50 bg-white border border-mint-light rounded-2xl shadow-lg p-4 min-w-[260px]"
+                        style={{ left: pickerPos.left, bottom: pickerPos.bottom }}
+                      >
                         <p className="text-xs uppercase tracking-wider text-muted font-semibold mb-3">Select a plot to compare</p>
                         <div className="space-y-1.5 max-h-64 overflow-y-auto">
                           {plots.filter(p => p.id !== sourcePlot?.id).map(p => (
