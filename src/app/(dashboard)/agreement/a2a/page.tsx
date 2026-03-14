@@ -172,7 +172,6 @@ export default function A2APage() {
     if (!form.investorName.trim()) errs.investorName = true;
     if (!form.investorPhone.trim()) errs.investorPhone = true;
     if (!form.investorEmail.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(form.investorEmail)) errs.investorEmail = true;
-    if (!signature) errs.signature = true;
     setErrors(errs);
     return Object.keys(errs).length === 0;
   }
@@ -308,20 +307,9 @@ export default function A2APage() {
           </div>
         </div>
 
-        {/* Signature & Date */}
+        {/* Date */}
         <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-sm border border-mint-light/30 p-6">
-          <div className="flex items-center justify-between mb-4">
-            <p className="text-[10px] uppercase tracking-widest text-muted font-semibold">Signature (Party B)</p>
-            <button type="button" onClick={() => clearSig.current?.()} className="text-xs text-forest hover:text-deep-forest transition-colors font-medium">
-              Clear
-            </button>
-          </div>
-          <div className={`w-full h-36 border-2 border-dashed rounded-xl overflow-hidden ${errors.signature ? "border-red-400 bg-red-50/30" : "border-mint-light bg-white"}`}>
-            <SignaturePad onEnd={setSignature} clearRef={clearSig} />
-          </div>
-          {errors.signature && <p className="text-xs text-red-500 mt-1">Signature is required</p>}
-
-          <div className="mt-4">
+          <div>
             <p className="text-xs text-muted mb-1">Date</p>
             <p className="text-sm font-medium text-deep-forest bg-mint-bg/40 border border-mint-light/40 rounded-xl px-4 py-2.5 w-fit">{dateStr || "\u00A0"}</p>
           </div>

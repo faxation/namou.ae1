@@ -186,7 +186,6 @@ function PropertyIntroductionForm() {
     if (!form.passportId.trim()) errs.passportId = true;
     if (!form.city.trim()) errs.city = true;
     if (!form.country.trim()) errs.country = true;
-    if (!signature) errs.signature = true;
     setErrors(errs);
     return Object.keys(errs).length === 0;
   }
@@ -255,18 +254,6 @@ function PropertyIntroductionForm() {
         </Field>
       </div>
 
-      {/* Signature */}
-      <div>
-        <div className="flex items-center justify-between mb-2">
-          <p className="text-[9px] uppercase tracking-widest text-muted font-semibold">Signature</p>
-          <button type="button" onClick={() => clearSig.current?.()} className="text-[10px] text-forest hover:text-deep-forest transition-colors font-medium">Clear</button>
-        </div>
-        <div className={`w-full h-24 border-2 border-dashed rounded-lg overflow-hidden ${errors.signature ? "border-red-400 bg-red-50/30" : "border-mint-light bg-white"}`}>
-          <SignaturePad onEnd={setSignature} clearRef={clearSig} />
-        </div>
-        {errors.signature && <p className="text-[10px] text-red-500 mt-0.5">Signature is required</p>}
-      </div>
-
       {/* Date + Submit */}
       <div className="flex items-end justify-between mt-auto">
         <div>
@@ -316,7 +303,6 @@ function A2AForm() {
     if (!form.investorName.trim()) errs.investorName = true;
     if (!form.investorPhone.trim()) errs.investorPhone = true;
     if (!form.investorEmail.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(form.investorEmail)) errs.investorEmail = true;
-    if (!signature) errs.signature = true;
     setErrors(errs);
     return Object.keys(errs).length === 0;
   }
@@ -422,18 +408,6 @@ function A2AForm() {
             <input type="email" value={form.investorEmail} onChange={(e) => set("investorEmail", e.target.value)} maxLength={254} className={inputCls(errors.investorEmail)} placeholder="investor@email.com" />
           </Field>
         </div>
-      </div>
-
-      {/* Signature */}
-      <div>
-        <div className="flex items-center justify-between mb-2">
-          <p className="text-[9px] uppercase tracking-widest text-muted font-semibold">Signature (Party B)</p>
-          <button type="button" onClick={() => clearSig.current?.()} className="text-[10px] text-forest hover:text-deep-forest transition-colors font-medium">Clear</button>
-        </div>
-        <div className={`w-full h-24 border-2 border-dashed rounded-lg overflow-hidden ${errors.signature ? "border-red-400 bg-red-50/30" : "border-mint-light bg-white"}`}>
-          <SignaturePad onEnd={setSignature} clearRef={clearSig} />
-        </div>
-        {errors.signature && <p className="text-[10px] text-red-500 mt-0.5">Signature is required</p>}
       </div>
 
       {/* Date + Submit */}
