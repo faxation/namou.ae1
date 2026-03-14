@@ -141,7 +141,8 @@ function NextStepsModal({ onClose, plotName, selectedPlots, enableOfferWebhook =
               sourceAction: "offer-popup-submit",
               agreement_type: "a2a",
               assignee_email: "undefined",
-              contact_id: a2aForm.phone || "-",
+              phone_number: a2aForm.phone || "-",
+              src: "webpage",
               data: {
                 name: a2aForm.contactPerson || "-",
                 email: a2aForm.email || "-",
@@ -163,7 +164,8 @@ function NextStepsModal({ onClose, plotName, selectedPlots, enableOfferWebhook =
               sourcePage: "/offer",
               sourceAction: "offer-popup-submit",
               agreement_type: "b2a",
-              contact_id: piForm.mobile || "-",
+              phone_number: piForm.mobile || "-",
+              src: "webpage",
               assignee_email: "undefined",
               data: {
                 investor_name: piForm.fullName || "-",
