@@ -216,25 +216,21 @@ function MasterPlanContent() {
           )}
 
           {/* Area summary stats — top-right overlay, always visible */}
-          <div className="absolute top-3 right-3 z-[800] bg-white/90 backdrop-blur-sm rounded-xl p-4 text-xs text-deep-forest shadow-sm min-w-[180px]">
+          <div className="absolute top-3 right-3 z-[800] bg-white/90 backdrop-blur-sm rounded-xl p-4 text-xs text-deep-forest shadow-sm min-w-[220px]">
             <p className="text-[10px] uppercase tracking-wider text-muted font-semibold mb-2">Area Summary</p>
             <div className="space-y-2">
-              <div className="flex justify-between">
-                <span className="text-muted">Plots Shown</span>
-                <span className="font-bold text-forest">{filteredPlots.length}</span>
+              <div className="flex justify-between gap-4">
+                <span className="text-muted shrink-0">Plots Shown</span>
+                <span className="font-bold text-forest whitespace-nowrap">{filteredPlots.length}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-muted">Total Area</span>
-                <span className="font-bold text-deep-forest">{formatNumber(filteredPlots.reduce((s, p) => s + p.plotArea, 0))} sqft</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted">Avg. Price/sqft</span>
-                <span className="font-bold text-deep-forest">AED {formatNumber(Math.round(filteredPlots.reduce((s, p) => s + p.pricePerSqFt, 0) / (filteredPlots.length || 1)))}</span>
+              <div className="flex justify-between gap-4">
+                <span className="text-muted shrink-0">Avg. Price/sqft</span>
+                <span className="font-bold text-deep-forest whitespace-nowrap">AED {formatNumber(Math.round(filteredPlots.reduce((s, p) => s + p.pricePerSqFt, 0) / (filteredPlots.length || 1)))}</span>
               </div>
               {filteredPlots.length > 0 && (
-                <div className="flex justify-between">
-                  <span className="text-muted">Price Range</span>
-                  <span className="font-bold text-deep-forest">AED {formatNumber(Math.min(...filteredPlots.map(p => p.pricePerSqFt)))}–{formatNumber(Math.max(...filteredPlots.map(p => p.pricePerSqFt)))}</span>
+                <div className="flex justify-between gap-4">
+                  <span className="text-muted shrink-0">Price Range</span>
+                  <span className="font-bold text-deep-forest whitespace-nowrap">AED {formatNumber(Math.min(...filteredPlots.map(p => p.pricePerSqFt)))}–{formatNumber(Math.max(...filteredPlots.map(p => p.pricePerSqFt)))}</span>
                 </div>
               )}
             </div>
