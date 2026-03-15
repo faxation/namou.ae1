@@ -551,17 +551,15 @@ export default function FinalOfferPage() {
           {paymentStages.length > 0 ? (
             <div className="divide-y divide-mint-light/60 flex-1">
               {paymentStages.map((stage, i) => (
-                <div key={i} className="flex items-center justify-between py-3">
-                  <div className="flex items-center gap-3 min-w-0">
-                    <span className="w-6 h-6 rounded-full bg-forest/10 text-forest text-xs font-bold flex items-center justify-center shrink-0">{i + 1}</span>
-                    <div className="min-w-0">
-                      <p className="text-sm text-deep-forest font-medium truncate">{stage.label}</p>
-                      {stage.sub && <p className="text-xs text-muted">{stage.sub}</p>}
-                    </div>
+                <div key={i} className="flex items-center justify-between py-4">
+                  <div className="flex items-center gap-3">
+                    <span className="w-7 h-7 rounded-full bg-forest/10 text-forest text-xs font-bold flex items-center justify-center shrink-0">{i + 1}</span>
+                    <p className="text-lg font-bold text-deep-forest">{stage.pct}%</p>
                   </div>
                   <div className="text-right shrink-0 ml-3">
                     <p className="text-base font-bold text-deep-forest">{fmtAED(stage.amount)}</p>
-                    <p className="text-xs text-muted">{stage.pct}%</p>
+                    <p className="text-xs text-muted">{stage.label}</p>
+                    {stage.sub && <p className="text-[11px] text-muted">{stage.sub}</p>}
                   </div>
                 </div>
               ))}
@@ -569,7 +567,7 @@ export default function FinalOfferPage() {
           ) : (
             <p className="text-sm text-muted italic flex-1 flex items-center">No payment plan available for this plot.</p>
           )}
-          <div className="mt-3 pt-3 border-t border-mint-light/60 flex justify-between text-sm">
+          <div className="mt-auto pt-4 border-t border-mint-light/60 flex justify-between text-sm">
             <span className="text-muted">Total</span>
             <span className="font-bold text-deep-forest">{fmtAED(offerSummary.landCost)}</span>
           </div>
