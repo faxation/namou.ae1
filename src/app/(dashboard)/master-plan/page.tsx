@@ -232,12 +232,12 @@ function MasterPlanContent() {
                   </div>
                   <div className="flex justify-between gap-4">
                     <span className="text-muted shrink-0">Avg. Price/sqft</span>
-                    <span className="font-bold text-deep-forest whitespace-nowrap">AED {formatNumber(Math.round(filteredPlots.reduce((s, p) => s + p.pricePerSqFt, 0) / (filteredPlots.length || 1)))}</span>
+                    <span className="font-bold text-deep-forest whitespace-nowrap">AED {formatNumber(Math.round(summaryPlots.reduce((s, p) => s + p.pricePerSqFt, 0) / (summaryPlots.length || 1)))}</span>
                   </div>
-                  {filteredPlots.length > 0 && (
+                  {summaryPlots.length > 0 && (
                     <div className="flex justify-between gap-4">
                       <span className="text-muted shrink-0">Price Range</span>
-                      <span className="font-bold text-deep-forest whitespace-nowrap">AED {formatNumber(Math.min(...filteredPlots.map(p => p.pricePerSqFt)))}–{formatNumber(Math.max(...filteredPlots.map(p => p.pricePerSqFt)))}</span>
+                      <span className="font-bold text-deep-forest whitespace-nowrap">AED {formatNumber(Math.min(...summaryPlots.map(p => p.pricePerSqFt)))}–{formatNumber(Math.max(...summaryPlots.map(p => p.pricePerSqFt)))}</span>
                     </div>
                   )}
                 </div>
