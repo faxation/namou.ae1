@@ -219,7 +219,7 @@ export default function ROIPage() {
   }
 
   return (
-    <div className="flex flex-col flex-1 min-h-0 overflow-y-auto md:overflow-y-hidden animate-fade-in">
+    <div className={`flex flex-col flex-1 min-h-0 overflow-y-auto animate-fade-in ${isCompareMode ? "" : "md:overflow-y-hidden"}`}>
 
       {/* ── Header ── */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 shrink-0 mb-1 lg:mb-1">
@@ -293,7 +293,7 @@ export default function ROIPage() {
       </div>
 
       {/* ── Top/bottom: top = variables, bottom = results ── */}
-      <div className="flex-1 min-h-0 flex flex-col gap-0.5 lg:gap-1 overflow-hidden">
+      <div className={`flex-1 min-h-0 flex flex-col gap-0.5 lg:gap-1 ${isCompareMode ? "" : "overflow-hidden"}`}>
 
         {/* ═══════════ TOP: Variables ═══════════ */}
         <div className="shrink-0 flex flex-col gap-1">
@@ -487,7 +487,7 @@ export default function ROIPage() {
         </div>
 
         {/* ═══════════ BOTTOM: Results ═══════════ */}
-        <div className={`flex-1 flex flex-col min-h-0 overflow-y-auto ${isCompareMode ? "gap-2 lg:gap-3" : "gap-1 lg:gap-1.5"}`}>
+        <div className={`flex-1 flex flex-col min-h-0 ${isCompareMode ? "gap-1" : "overflow-y-auto gap-1 lg:gap-1.5"}`}>
 
           {/* ── Single-plot results ── */}
           {!isCompareMode && (
@@ -593,7 +593,7 @@ export default function ROIPage() {
           {isCompareMode && results2 && inputs2 && (
             <>
               {/* Detailed comparison table */}
-              <ContentCard className="flex-1 min-h-0 overflow-auto py-1 px-4">
+              <ContentCard className="py-1 px-4">
                 <div className="grid gap-0" style={{ gridTemplateColumns: "1fr 1fr 1fr" }}>
                   <div className="py-0.5 text-[11px] font-semibold text-muted">Metric</div>
                   <div className="py-0.5 flex items-center justify-end"><span className="w-2 h-2 rounded-full bg-forest" /></div>
@@ -663,25 +663,25 @@ function KPICard({
       onMouseEnter={() => (tooltipLines || tooltipFormula) && setShow(true)}
       onMouseLeave={() => setShow(false)}
     >
-      <ContentCard className={`${cardBg} ${compareValues ? "py-1.5 px-3 h-full flex flex-col justify-center" : "py-1.5 px-4"}`}>
-        <p className={`text-xs uppercase tracking-widest text-muted ${compareValues ? "mb-0.5" : "mb-0.5"} font-semibold text-center`}>{label}</p>
+      <ContentCard className={`${cardBg} ${compareValues ? "py-2.5 px-4 h-full flex flex-col justify-center" : "py-1.5 px-4"}`}>
+        <p className={`uppercase tracking-widest text-muted font-semibold text-center ${compareValues ? "text-[11px] mb-1" : "text-xs mb-0.5"}`}>{label}</p>
         {compareValues ? (
-          <div className="flex items-stretch gap-3">
+          <div className="flex items-stretch gap-4">
             <div className="flex-1 text-center min-w-0">
-              <p className="text-[10px] font-medium text-forest leading-normal mb-0.5">{compareValues.label1}</p>
-              <p className={`${primary ? "text-lg" : "text-base"} font-bold font-heading leading-snug text-forest`}>{compareValues.v1}</p>
+              <p className="text-[11px] font-medium text-forest leading-normal mb-0.5">{compareValues.label1}</p>
+              <p className={`${primary ? "text-xl" : "text-lg"} font-bold font-heading leading-snug text-forest`}>{compareValues.v1}</p>
               {compareValues.badge1 && (
-                <span className={`mt-0.5 inline-block text-[9px] font-semibold px-1.5 py-0 rounded-full truncate max-w-full ${compareValues.badge1.bg} ${compareValues.badge1.text}`}>
+                <span className={`mt-0.5 inline-block text-[10px] font-semibold px-2 py-0 rounded-full truncate max-w-full ${compareValues.badge1.bg} ${compareValues.badge1.text}`}>
                   {compareValues.badge1.label}
                 </span>
               )}
             </div>
             <div className="w-px shrink-0 bg-mint-light/60" />
             <div className="flex-1 text-center min-w-0">
-              <p className="text-[10px] font-medium text-compare-b leading-normal mb-0.5">{compareValues.label2}</p>
-              <p className={`${primary ? "text-lg" : "text-base"} font-bold font-heading leading-snug text-compare-b`}>{compareValues.v2}</p>
+              <p className="text-[11px] font-medium text-compare-b leading-normal mb-0.5">{compareValues.label2}</p>
+              <p className={`${primary ? "text-xl" : "text-lg"} font-bold font-heading leading-snug text-compare-b`}>{compareValues.v2}</p>
               {compareValues.badge2 && (
-                <span className={`mt-0.5 inline-block text-[9px] font-semibold px-1.5 py-0 rounded-full truncate max-w-full ${compareValues.badge2.bg} ${compareValues.badge2.text}`}>
+                <span className={`mt-0.5 inline-block text-[10px] font-semibold px-2 py-0 rounded-full truncate max-w-full ${compareValues.badge2.bg} ${compareValues.badge2.text}`}>
                   {compareValues.badge2.label}
                 </span>
               )}
