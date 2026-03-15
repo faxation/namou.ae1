@@ -296,7 +296,7 @@ export default function ROIPage() {
       <div className={`flex-1 min-h-0 flex flex-col gap-0.5 lg:gap-1 ${isCompareMode ? "" : "overflow-hidden"}`}>
 
         {/* ═══════════ TOP: Variables ═══════════ */}
-        <div className="shrink-0 flex flex-col gap-1">
+        <div className={`flex flex-col gap-1 ${isCompareMode ? "shrink-0" : "flex-1 min-h-0"}`}>
 
           {/* Active scenario info */}
           <div className="bg-mint-bg/50 rounded-lg px-4 py-0.5 border border-mint-light/40 shrink-0 flex items-center justify-between gap-4">
@@ -390,8 +390,8 @@ export default function ROIPage() {
             </div>
           </ContentCard>
           ) : (
-          <ContentCard className="p-3 flex flex-col">
-            <div className="grid grid-cols-2 gap-x-6">
+          <ContentCard className="p-3 flex flex-col flex-1">
+            <div className="grid grid-cols-2 gap-x-6 flex-1">
               {/* Left: All inputs */}
               <div className="flex flex-col justify-evenly border-r border-mint-light/40 pr-6">
                 <div>
