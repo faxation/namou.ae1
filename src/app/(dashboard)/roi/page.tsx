@@ -588,7 +588,7 @@ export default function ROIPage() {
                     }}
                     className="flex items-center gap-2 px-6 py-2.5 bg-forest text-white rounded-xl font-semibold text-sm hover:bg-deep-forest transition-colors"
                   >
-                    Offer Simulator
+                    Payment Plan
                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><polyline points="9 18 15 12 9 6" /></svg>
                   </button>
                 </div>
@@ -626,7 +626,7 @@ export default function ROIPage() {
                   ))}
                 </div>
 
-                {/* Offer Simulator button */}
+                {/* Payment Plan button */}
                 <div className="flex justify-end mt-3 pt-3 border-t border-mint-light/40">
                   <button
                     onClick={() => {
@@ -635,7 +635,7 @@ export default function ROIPage() {
                     }}
                     className="flex items-center gap-2 px-6 py-2.5 bg-forest text-white rounded-xl font-semibold text-sm hover:bg-deep-forest transition-colors"
                   >
-                    Offer Simulator
+                    Payment Plan
                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><polyline points="9 18 15 12 9 6" /></svg>
                   </button>
                 </div>
