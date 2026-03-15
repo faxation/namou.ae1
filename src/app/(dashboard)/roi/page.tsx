@@ -294,10 +294,10 @@ export default function ROIPage() {
       </div>
 
       {/* ── Top/bottom: top = variables, bottom = results ── */}
-      <div className={`flex-1 min-h-0 flex flex-col gap-0.5 lg:gap-1 ${isCompareMode ? "" : "overflow-hidden"}`}>
+      <div className="flex-1 min-h-0 flex flex-col gap-0.5 lg:gap-1 overflow-hidden">
 
         {/* ═══════════ TOP: Variables ═══════════ */}
-        <div className="shrink-0 flex flex-col gap-1">
+        <div className={`flex flex-col gap-1 ${isCompareMode ? "min-h-0" : "shrink-0"}`}>
 
           {/* Active scenario info */}
           <div className="bg-mint-bg/50 rounded-lg px-4 py-0.5 border border-mint-light/40 shrink-0 flex items-center justify-between gap-4">
@@ -328,12 +328,12 @@ export default function ROIPage() {
           {isCompareMode && inputs2 && results2 ? (
           <div className="grid grid-cols-[2fr_3fr] gap-2 min-h-0">
             {/* Left: Variables — own frame */}
-            <ContentCard className="flex flex-col py-3 px-4">
+            <ContentCard className="flex flex-col py-2 px-4">
               <div className="flex flex-col justify-evenly flex-1">
                 <div>
-                  <p className="text-xs uppercase tracking-widest text-muted font-semibold mb-1.5">Land</p>
+                  <p className="text-xs uppercase tracking-widest text-muted font-semibold mb-1">Land</p>
                   <div className="divide-y divide-mint-light/60 flex flex-col">
-                    <div className="flex items-center justify-between py-2">
+                    <div className="flex items-center justify-between py-1.5">
                       <span className="text-sm text-muted">Pricing Method</span>
                       <TogglePair
                         optA={{ key: "per-plot", label: "/ Plot sqft" }}
@@ -350,8 +350,8 @@ export default function ROIPage() {
                   </div>
                 </div>
 
-                <div className="pt-3 border-t border-mint-light/40">
-                  <p className="text-xs uppercase tracking-widest text-muted font-semibold mb-1.5">Construction</p>
+                <div className="pt-2 border-t border-mint-light/40">
+                  <p className="text-xs uppercase tracking-widest text-muted font-semibold mb-1">Construction</p>
                   <div className="divide-y divide-mint-light/60 flex flex-col">
                     <NumInput label="Cost / GFA sqft" value={inputs.constructionCostPerGFA} unit="AED" prefix onChange={v => update("constructionCostPerGFA", v)} />
                     <NumInput label="Soft Cost" value={inputs.softCostPct} unit="%" suffix onChange={v => update("softCostPct", v)} />
@@ -360,8 +360,8 @@ export default function ROIPage() {
                   </div>
                 </div>
 
-                <div className="pt-3 border-t border-mint-light/40">
-                  <p className="text-xs uppercase tracking-widest text-muted font-semibold mb-1.5">Sales</p>
+                <div className="pt-2 border-t border-mint-light/40">
+                  <p className="text-xs uppercase tracking-widest text-muted font-semibold mb-1">Sales</p>
                   <div className="divide-y divide-mint-light/60 flex flex-col">
                     <NumInput label="Selling Price / NSA" value={inputs.sellingPricePerNSA} unit="AED" prefix onChange={v => update("sellingPricePerNSA", v)} />
                     <ComputedRow label="Equiv. Price / GFA" value={`AED ${formatNumber(Math.round(results.equivPricePerGFA))}`} />
@@ -499,7 +499,7 @@ export default function ROIPage() {
         </div>
 
         {/* ═══════════ BOTTOM: Results ═══════════ */}
-        <div className={`flex-1 flex flex-col min-h-0 ${isCompareMode ? "gap-1" : "overflow-y-auto gap-1 lg:gap-1.5"}`}>
+        <div className={`flex-1 flex flex-col min-h-0 ${isCompareMode ? "gap-0.5" : "overflow-y-auto gap-1 lg:gap-1.5"}`}>
 
           {/* ── Single-plot results ── */}
           {!isCompareMode && (
@@ -632,7 +632,7 @@ export default function ROIPage() {
                 </div>
 
                 {/* Payment Plan button */}
-                <div className="flex justify-end mt-3 pt-3 border-t border-mint-light/40">
+                <div className="flex justify-end mt-2 pt-2 border-t border-mint-light/40">
                   <button
                     onClick={() => {
                       sessionStorage.setItem("roi_results", JSON.stringify({ inputs, results, activeScenario }));
@@ -677,25 +677,25 @@ function KPICard({
       onMouseEnter={() => (tooltipLines || tooltipFormula) && setShow(true)}
       onMouseLeave={() => setShow(false)}
     >
-      <ContentCard className={`${cardBg} ${compareValues ? "py-1.5 px-3" : "py-2 px-3"} h-full flex flex-col justify-center`}>
-        <p className={`uppercase tracking-widest text-muted font-semibold text-center ${compareValues ? "text-xs mb-1" : "text-[11px] mb-1"}`}>{label}</p>
+      <ContentCard className={`${cardBg} ${compareValues ? "py-1 px-2" : "py-2 px-3"} h-full flex flex-col justify-center`}>
+        <p className={`uppercase tracking-widest text-muted font-semibold text-center ${compareValues ? "text-[10px] mb-0.5" : "text-[11px] mb-1"}`}>{label}</p>
         {compareValues ? (
-          <div className="flex items-stretch gap-3">
+          <div className="flex items-stretch gap-2">
             <div className="flex-1 text-center min-w-0">
-              <p className="text-xs font-medium text-forest leading-normal mb-0.5">{compareValues.label1}</p>
-              <p className={`${primary ? "text-2xl" : "text-xl"} font-bold font-heading leading-snug text-forest`}>{compareValues.v1}</p>
+              <p className="text-[10px] font-medium text-forest leading-normal mb-0">{compareValues.label1}</p>
+              <p className={`${primary ? "text-xl" : "text-lg"} font-bold font-heading leading-snug text-forest`}>{compareValues.v1}</p>
               {compareValues.badge1 && (
-                <span className={`mt-1 inline-block text-[11px] font-semibold px-2.5 py-0.5 rounded-full truncate max-w-full ${compareValues.badge1.bg} ${compareValues.badge1.text}`}>
+                <span className={`mt-0.5 inline-block text-[10px] font-semibold px-2 py-0 rounded-full truncate max-w-full ${compareValues.badge1.bg} ${compareValues.badge1.text}`}>
                   {compareValues.badge1.label}
                 </span>
               )}
             </div>
             <div className="w-px shrink-0 bg-mint-light/60" />
             <div className="flex-1 text-center min-w-0">
-              <p className="text-xs font-medium text-compare-b leading-normal mb-0.5">{compareValues.label2}</p>
-              <p className={`${primary ? "text-2xl" : "text-xl"} font-bold font-heading leading-snug text-compare-b`}>{compareValues.v2}</p>
+              <p className="text-[10px] font-medium text-compare-b leading-normal mb-0">{compareValues.label2}</p>
+              <p className={`${primary ? "text-xl" : "text-lg"} font-bold font-heading leading-snug text-compare-b`}>{compareValues.v2}</p>
               {compareValues.badge2 && (
-                <span className={`mt-1 inline-block text-[11px] font-semibold px-2.5 py-0.5 rounded-full truncate max-w-full ${compareValues.badge2.bg} ${compareValues.badge2.text}`}>
+                <span className={`mt-0.5 inline-block text-[10px] font-semibold px-2 py-0 rounded-full truncate max-w-full ${compareValues.badge2.bg} ${compareValues.badge2.text}`}>
                   {compareValues.badge2.label}
                 </span>
               )}
