@@ -546,19 +546,19 @@ export default function FinalOfferPage() {
 
       {/* Cost breakdown + offer details */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1 min-h-0">
-        <ContentCard className="flex flex-col">
-          <p className="text-xs uppercase tracking-widest text-muted mb-3 font-semibold">Payment Schedule</p>
+        <ContentCard className={`flex flex-col ${paymentStages.length > 4 ? "p-3 md:p-4" : ""}`}>
+          <p className={`text-xs uppercase tracking-widest text-muted font-semibold ${paymentStages.length > 4 ? "mb-2" : "mb-3"}`}>Payment Schedule</p>
           {paymentStages.length > 0 ? (
             <div className="divide-y divide-mint-light/60 flex-1">
               {paymentStages.map((stage, i) => (
-                <div key={i} className="flex items-center justify-between py-4">
+                <div key={i} className={`flex items-center justify-between ${paymentStages.length > 4 ? "py-2" : "py-4"}`}>
                   <div className="flex items-center gap-3">
-                    <span className="w-7 h-7 rounded-full bg-forest/10 text-forest text-xs font-bold flex items-center justify-center shrink-0">{i + 1}</span>
-                    <p className="text-lg font-bold text-deep-forest">{stage.pct}%</p>
+                    <span className={`rounded-full bg-forest/10 text-forest font-bold flex items-center justify-center shrink-0 ${paymentStages.length > 4 ? "w-6 h-6 text-[10px]" : "w-7 h-7 text-xs"}`}>{i + 1}</span>
+                    <p className={`font-bold text-deep-forest ${paymentStages.length > 4 ? "text-base" : "text-lg"}`}>{stage.pct}%</p>
                   </div>
                   <div className="text-right shrink-0 ml-3">
-                    <p className="text-base font-bold text-deep-forest">{fmtAED(stage.amount)}</p>
-                    <p className="text-xs text-muted">{stage.label}</p>
+                    <p className={`font-bold text-deep-forest ${paymentStages.length > 4 ? "text-sm" : "text-base"}`}>{fmtAED(stage.amount)}</p>
+                    <p className={`text-muted ${paymentStages.length > 4 ? "text-[11px]" : "text-xs"}`}>{stage.label}</p>
                     {stage.sub && <p className="text-[11px] text-muted">{stage.sub}</p>}
                   </div>
                 </div>
@@ -567,7 +567,7 @@ export default function FinalOfferPage() {
           ) : (
             <p className="text-sm text-muted italic flex-1 flex items-center">No payment plan available for this plot.</p>
           )}
-          <div className="mt-auto pt-4 border-t border-mint-light/60 flex justify-between text-sm">
+          <div className={`mt-auto border-t border-mint-light/60 flex justify-between text-sm ${paymentStages.length > 4 ? "pt-2" : "pt-4"}`}>
             <span className="text-muted">Total</span>
             <span className="font-bold text-deep-forest">{fmtAED(offerSummary.landCost)}</span>
           </div>
