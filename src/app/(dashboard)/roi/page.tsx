@@ -326,15 +326,15 @@ export default function ROIPage() {
 
           {/* Input variables */}
           {isCompareMode && inputs2 && results2 ? (
-          <ContentCard className="flex flex-col overflow-y-auto min-h-0 py-3 px-3 md:py-4 md:px-4">
-            <div className="grid grid-cols-2 gap-x-6 flex-1">
-              {/* Left: All inputs */}
-              <div className="flex flex-col justify-evenly border-r border-mint-light/40 pr-6">
+          <div className="grid grid-cols-[2fr_3fr] gap-2 min-h-0">
+            {/* Left: Variables — own frame */}
+            <ContentCard className="flex flex-col py-3 px-4">
+              <div className="flex flex-col justify-evenly flex-1">
                 <div>
-                  <p className="text-[10px] uppercase tracking-widest text-muted font-semibold mb-1">Land</p>
+                  <p className="text-xs uppercase tracking-widest text-muted font-semibold mb-1.5">Land</p>
                   <div className="divide-y divide-mint-light/60 flex flex-col">
-                    <div className="flex items-center justify-between py-1.5">
-                      <span className="text-xs text-muted">Pricing Method</span>
+                    <div className="flex items-center justify-between py-2">
+                      <span className="text-sm text-muted">Pricing Method</span>
                       <TogglePair
                         optA={{ key: "per-plot", label: "/ Plot sqft" }}
                         optB={{ key: "per-gfa",  label: "/ GFA" }}
@@ -350,8 +350,8 @@ export default function ROIPage() {
                   </div>
                 </div>
 
-                <div className="pt-2 border-t border-mint-light/40">
-                  <p className="text-[10px] uppercase tracking-widest text-muted font-semibold mb-1">Construction</p>
+                <div className="pt-3 border-t border-mint-light/40">
+                  <p className="text-xs uppercase tracking-widest text-muted font-semibold mb-1.5">Construction</p>
                   <div className="divide-y divide-mint-light/60 flex flex-col">
                     <NumInput label="Cost / GFA sqft" value={inputs.constructionCostPerGFA} unit="AED" prefix onChange={v => update("constructionCostPerGFA", v)} />
                     <NumInput label="Soft Cost" value={inputs.softCostPct} unit="%" suffix onChange={v => update("softCostPct", v)} />
@@ -360,17 +360,19 @@ export default function ROIPage() {
                   </div>
                 </div>
 
-                <div className="pt-2 border-t border-mint-light/40">
-                  <p className="text-[10px] uppercase tracking-widest text-muted font-semibold mb-1">Sales</p>
+                <div className="pt-3 border-t border-mint-light/40">
+                  <p className="text-xs uppercase tracking-widest text-muted font-semibold mb-1.5">Sales</p>
                   <div className="divide-y divide-mint-light/60 flex flex-col">
                     <NumInput label="Selling Price / NSA" value={inputs.sellingPricePerNSA} unit="AED" prefix onChange={v => update("sellingPricePerNSA", v)} />
                     <ComputedRow label="Equiv. Price / GFA" value={`AED ${formatNumber(Math.round(results.equivPricePerGFA))}`} />
                   </div>
                 </div>
               </div>
+            </ContentCard>
 
-              {/* Right: KPI results (2×4 grid) */}
-              <div className="grid grid-cols-2 gap-1 auto-rows-fr">
+            {/* Right: KPI results — own frame */}
+            <ContentCard className="py-2 px-2">
+              <div className="grid grid-cols-2 gap-1 auto-rows-fr h-full">
                 <KPICard label="Revenue (GDV)" value=""
                   compareValues={{ v1: fmtAED(results.revenue), v2: fmtAED(results2.revenue), label1: comparePlots[0].name, label2: comparePlots[1].name }} />
                 <KPICard label="Total Cost" value=""
@@ -388,8 +390,8 @@ export default function ROIPage() {
                 <KPICard label="Residual Land Value" value=""
                   compareValues={{ v1: fmtAED(results.rlv), v2: fmtAED(results2.rlv), label1: comparePlots[0].name, label2: comparePlots[1].name }} />
               </div>
-            </div>
-          </ContentCard>
+            </ContentCard>
+          </div>
           ) : (
           <ContentCard className="p-3 flex flex-col">
             <div className="grid grid-cols-2 gap-x-6">
@@ -671,10 +673,10 @@ function KPICard({
       onMouseEnter={() => (tooltipLines || tooltipFormula) && setShow(true)}
       onMouseLeave={() => setShow(false)}
     >
-      <ContentCard className={`${cardBg} ${compareValues ? "py-3 px-5 h-full flex flex-col justify-center" : "py-1.5 px-4"}`}>
-        <p className={`uppercase tracking-widest text-muted font-semibold text-center ${compareValues ? "text-xs mb-1.5" : "text-xs mb-0.5"}`}>{label}</p>
+      <ContentCard className={`${cardBg} ${compareValues ? "py-1.5 px-3 h-full flex flex-col justify-center" : "py-1.5 px-4"}`}>
+        <p className={`uppercase tracking-widest text-muted font-semibold text-center ${compareValues ? "text-xs mb-1" : "text-xs mb-0.5"}`}>{label}</p>
         {compareValues ? (
-          <div className="flex items-stretch gap-5">
+          <div className="flex items-stretch gap-3">
             <div className="flex-1 text-center min-w-0">
               <p className="text-xs font-medium text-forest leading-normal mb-0.5">{compareValues.label1}</p>
               <p className={`${primary ? "text-2xl" : "text-xl"} font-bold font-heading leading-snug text-forest`}>{compareValues.v1}</p>
