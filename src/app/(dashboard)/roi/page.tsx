@@ -393,11 +393,11 @@ export default function ROIPage() {
             </ContentCard>
           </div>
           ) : (
-          <ContentCard className="p-3 flex flex-col">
-            <div className="grid grid-cols-2 gap-x-6">
-              {/* Left: All inputs */}
-              <div className="flex flex-col border-r border-mint-light/40 pr-6">
-                <div className="flex-1 flex flex-col justify-center">
+          <div className="flex gap-2 lg:gap-3">
+            {/* Left: Variables — own frame */}
+            <ContentCard className="flex-1 p-3 flex flex-col">
+              <div className="flex-1 flex flex-col justify-evenly">
+                <div>
                   <p className="text-[10px] uppercase tracking-widest text-muted font-semibold mb-2">Land Acquisition</p>
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-sm text-muted">Pricing Method</span>
@@ -413,19 +413,22 @@ export default function ROIPage() {
                     : <NumInput label="Price / GFA sqft"  value={inputs.pricePerGFA}       unit="AED" prefix onChange={v => update("pricePerGFA", v)} />
                   }
                 </div>
-                <div className="flex-1 flex flex-col justify-center pt-3 border-t border-mint-light/40">
+                <div className="pt-3 border-t border-mint-light/40">
                   <p className="text-[10px] uppercase tracking-widest text-muted font-semibold mb-2">Construction</p>
                   <NumInput label="Cost / GFA sqft" value={inputs.constructionCostPerGFA} unit="AED" prefix onChange={v => update("constructionCostPerGFA", v)} />
                   <NumInput label="Soft Cost" value={inputs.softCostPct} unit="%" suffix onChange={v => update("softCostPct", v)} />
                   <NumInput label="Efficiency (NSA / GFA)" value={inputs.efficiency} unit="%" suffix onChange={v => update("efficiency", v)} />
                 </div>
-                <div className="flex-1 flex flex-col justify-center pt-3 border-t border-mint-light/40">
+                <div className="pt-3 border-t border-mint-light/40">
                   <p className="text-[10px] uppercase tracking-widest text-muted font-semibold mb-2">Sales</p>
                   <NumInput label="Selling Price / NSA" value={inputs.sellingPricePerNSA} unit="AED" prefix onChange={v => update("sellingPricePerNSA", v)} />
                 </div>
               </div>
-              {/* Right: KPI results */}
-              <div className="flex flex-col gap-1 justify-evenly">
+            </ContentCard>
+
+            {/* Right: KPI results — own frame, 2×2 grid */}
+            <ContentCard className="flex-1 py-2 px-2">
+              <div className="grid grid-cols-2 gap-1 auto-rows-fr h-full">
                 <KPICard
                   label="Total Revenue (GDV)"
                   value={fmtAED(results.revenue)}
@@ -489,8 +492,8 @@ export default function ROIPage() {
                   ]}
                 />
               </div>
-            </div>
-          </ContentCard>
+            </ContentCard>
+          </div>
           )}
 
         </div>
